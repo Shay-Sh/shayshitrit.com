@@ -1,0 +1,305 @@
+{
+  "name": "Owl AI - To Share",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "42d4a54c-5",
+        "authentication": "headerAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "250eeba7-e8c6-4cd4-8d96-4bc79d904e41",
+      "name": "Webhook",
+      "webhookId": "42d4a54c-585f-4c42-9f97-3b5c4454e550",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "tV5EmF3XEIwTcc6u",
+          "name": "json2avi-dummy"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are OwlAI, an intelligent research assistant and knowledge capture. Analyze the following saved content and extract key information. Tailored it to the context you will have on you human.\nBe elaborative when needed.\n\n<<human context>>\nHere is some context about your human, Shay Shitrit, which you are his sidekick in capturing knowledge and becoming a superhuman:\n\nShay Shitrit is deeply immersed in the AI space (particularly since about 2022), focusing on building practical, innovative tools that enhance productivity. He created noteclear.io, a tool that helps organize thoughts using AI capabilities like voice-to-text, smart tagging, and idea connections.\nWhile Shay has strong technical understanding, he's not primarily a developer - he leverages no-code/low-code platforms like Bubble and n8n to bring his ideas to life. He's become particularly skilled at building AI agents and workflows for various purposes including content creation, information curation, and process automation.\nAgents and Flows Shay Has Built:\n\nnoteclear.io - His initial product built on Bubble that transforms scattered thoughts into organized text with AI-powered organization and tagging.\niWhisper - A Mac application that enhances any text field with voice dictation capabilities and AI processing, built using Cursor's AI assistant.\nSocial Content Automation - An automated workflow that creates promotional videos for noteclear based on a brand brief, using AI to generate scripts, voiceovers, and visuals.\nCatchUpAI - A system that processes newsletters and content from social media/news sites, extracting and enriching relevant information before delivering personalized daily summaries via Telegram.\nLinkedIn Agent - A specialized assistant that analyzes Shay's LinkedIn posts, tracks engagement metrics, and provides insights on content performance using vector databases for memory.\nAutoBloga - An automated content system that researches trending topics, creates SEO-optimized blog posts with custom images, and publishes them to WordPress or Bubble sites.\nPhone Call Agent - An autonomous system that makes calls, conducts natural conversations, schedules appointments, and integrates with calendar systems.\nShortsFactoryAI - Creates YouTube Shorts automatically from concept to upload, maintaining brand consistency and using ElevenLabs for voice generation.\nInboxNinja - An email management assistant that categorizes incoming emails, processes newsletters and receipts, and provides weekly summaries of important information.\n\nShay values self-reflection and optimization, maintaining regular practices to review progress and plan improvements. He follows developments in the AI industry closely, particularly advancements in agent technologies from companies like Anthropic.\nHis posts about these AI agent creations on LinkedIn have received significant engagement, with some reaching over 95,000 views. Shay is passionate about the \"build in public\" philosophy and regularly shares his learning process, mistakes, and insights with his growing community.\n\n----------\n\nContent Details:\nTitle: {{ $json.body.title }}\nURL:  {{ $json.body.url }}\nAuthor: \nSource Type: \nSaved At: {{ $json.body.savedAt }}\nTimestamp: {{ $now }}\n\nMain Content:\n{{ $json.body.content }}\n\nSelected Text (if any):\n{{ $json.body.selectedText }}\n\nEmbedded Links:\n{{ $json.body.links }}\n\nTags from User:\n{{ $json.body.tags }}\n\nUser Notes:\n{{ $json.body.notes }}\n\nIf this is a youtube video, it should have a transcript text here: \n{{ $json.body.transcript }}\n\nAnalyze this content thoroughly and provide the following:\nKeep the same languge as the article / knowledge piece itself. Don't translate the content, unless it is not in Hebrew or English. If the content is in Hebrew, leave it in Hebrew.\n\n1. Summary: Write a 2-3 sentence summary capturing the main idea. If it is a Youtube video and you have a transcript available make this summary long - up to 1750 charachters long. Very detailed.\n2. Key Points: Extract 3-5 most important takeaways as bullet points. If you can tailor it to the context about your human <<human context>>\n3. Title: Give a title to the content\n4. MAIN_TOPICS: List the primary topics discussed\n5. SUGGESTED_TAGS: Suggest 3-5 relevant tags beyond user's tags\n6. Category: Classify into ONE primary category out of the following options: AI, Business, Development, GTM, Product, Finance, News, Other. Only these categories, no other.\n7. Topics: List 1-3 topics if applicable\n8. Action Items: Suggest any todos, action items, or follow-ups mentioned - tailor that to the context you have about your human in <<human context>>\n9. Insights: Provide 1-2 unique insights or connections to broader themes\n10. URL: only the url of the content. from here: {{ $json.body.url }}\n11. Links: all the links from the webhoolk in a clean format, with no text to replace the link. only a list of links. {{ $json.body.links }} , and a list of images links if there are any: {{ $json.body.images }}\n12. Author: An individual author or the company / organization wrote the article / knowlesge piece. Give the full name if it is an individual. \n13. Source Type: Identify as LinkedIn, Blog, News, Research, Docs, Tutorial, Other\n14. Technical Level: Rate as Beginner, Intermediate, Advanced, or General\n15. Estimated Read Time: Calculate in minutes based on word count.  Provide only a number\n16. Cover Image: get an image url from the article / knowledge base. If no images existis default to an image base on the category:\nAI: https://res.cloudinary.com/dh7bfawzs/image/upload/v1746987996/ai_gj1nf7.png\nBusiness: https://res.cloudinary.com/dh7bfawzs/image/upload/v1746987996/biz_bva84k.png\nDevelopment: https://res.cloudinary.com/dh7bfawzs/image/upload/v1746987996/dev_tthxq0.png\nGTM: https://res.cloudinary.com/dh7bfawzs/image/upload/v1746987996/gtm_dkdaq5.png\nProduct: https://res.cloudinary.com/dh7bfawzs/image/upload/v1746987996/prd_r7mcp1.png\nNews: https://res.cloudinary.com/dh7bfawzs/image/upload/v1746987996/news_z7sveh.png\nFinance: https://res.cloudinary.com/dh7bfawzs/image/upload/v1746987996/fin_fithjh.png\nOther: https://res.cloudinary.com/dh7bfawzs/image/upload/v1746987996/other_j510yw.png\n\nAlways provide an image url or pass the default one. Image must be a valid url of type png, jpg, jpeg.\n\nFor LinkedIn posts specifically:\n- Pay attention to engagement tips or viral strategies\n- Note any metrics or success stories mentioned\n- Identify networking or business insights\n\nFor technical content:\n- Extract code snippets or technical specifications\n- Note tools, frameworks, or technologies mentioned\n- Identify best practices or warnings\n\n\n-----------\n\nOutput your response in JSON in the following structure:\n{\n\t\"Title\": \"title\",\n  \"URL\": \"url\",\n  \"Source Type\": \"title\",\n  \"Author\": \"author\",\n  \"Original Date\": \"original_date\",\n  \"Summary\": \"summary\",\n  \"Key Points\": \"key_points\",\n  \"Category\": \"category\",\n  \"Topics\": \"topics\",\n  \"Links\": \"links\",\n   \"Insights\": \"insights\",\n   \"Action Items\": \"action_items\",\n   \"Technical Level\": \"technical_level\",\n  \"Estimated Read Time\": \"estimated_read_time\",\n\"Cover Image URL\": \"cover_image\"\n  \n}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are OwlAI, an intelligent research assistant. Analyze the following saved content and extract key information.",
+          "maxIterations": 3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        180,
+        0
+      ],
+      "id": "fcb5f4da-f4c8-4d0c-a98e-bc1d7b21b17f",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        100,
+        200
+      ],
+      "id": "b3993f12-188a-4663-9741-0d7a4e0bb8f2",
+      "name": "OpenAI Chat Model"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "databaseId": {
+          "__rl": true,
+          "value": "1e86c16f-57fa-802e-baad-c98ce11b46ec",
+          "mode": "list",
+          "cachedResultName": "OwlAI Knowledge",
+          "cachedResultUrl": "https://www.notion.so/1e86c16f57fa802ebaadc98ce11b46ec"
+        },
+        "title": "={{ $json.output.Title }}",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "URL|url",
+              "ignoreIfEmpty": true,
+              "urlValue": "={{ $('Webhook').item.json.body.url }}"
+            },
+            {
+              "key": "Source Type|select",
+              "selectValue": "={{ $json.output['Source Type'] }}"
+            },
+            {
+              "key": "Author|rich_text",
+              "textContent": "={{ $json.output.Author }}"
+            },
+            {
+              "key": "Original Date|date",
+              "includeTime": false,
+              "date": "={{ $json.output['Original Date'] }}"
+            },
+            {
+              "key": "Summary|rich_text",
+              "textContent": "={{ $json.output.Summary }}"
+            },
+            {
+              "key": "Key Points|rich_text",
+              "textContent": "={{ $json.output['Key Points'] }}"
+            },
+            {
+              "key": "Category|multi_select",
+              "multiSelectValue": "={{ $json.output.Category }}"
+            },
+            {
+              "key": "Topics|multi_select",
+              "multiSelectValue": "={{ $json.output.Topics }}"
+            },
+            {
+              "key": "Links|rich_text",
+              "textContent": "={{ $json.output.Links }}"
+            },
+            {
+              "key": "Insights|rich_text",
+              "textContent": "={{ $json.output.Insights }}"
+            },
+            {
+              "key": "Action Items|rich_text",
+              "textContent": "={{ $json.output['Action Items'] }}"
+            },
+            {
+              "key": "Technical Level|select",
+              "selectValue": "={{ $json.output['Technical Level'] }}"
+            },
+            {
+              "key": "Estimated Read Time|number",
+              "numberValue": "={{ Number($json.output['Estimated Read Time']) }}"
+            },
+            {
+              "key": "Selected Text|rich_text",
+              "textContent": "={{ $('Webhook').item.json.body.selectedText }}"
+            },
+            {
+              "key": "Tags|multi_select",
+              "multiSelectValue": "={{ $('Webhook').item.json.body.tags }}"
+            },
+            {
+              "key": "Notes|rich_text",
+              "textContent": "={{ $('Webhook').item.json.body.notes }}"
+            },
+            {
+              "key": "Saved Date|date",
+              "includeTime": false,
+              "date": "={{ $now.format('yyyy-MM-dd') }}"
+            },
+            {
+              "key": "Cover Image|files",
+              "fileUrls": {
+                "fileUrl": [
+                  {
+                    "name": "cover image",
+                    "url": "={{ $json.output['Cover Image'] }}"
+                  }
+                ]
+              }
+            },
+            {
+              "key": "Tags|multi_select",
+              "multiSelectValue": "={{ $('Webhook').item.json.body.tags }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        940,
+        0
+      ],
+      "id": "30f58e80-878d-4bd7-a56b-3232abe196e9",
+      "name": "Notion"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a parser agent, responsible to make sure the content is being parsed to the below output structure at any time. \nfor the cover image field - only use image with an image extension in the file name (.png , .jpg , .jpeg). Otherwise fall back to this default image based on the category.\nCover Image: get an image url from the article / knowledge base. If no images existis default to an image base on the category:\nAI: https://res.cloudinary.com/dh7bfawzs/image/upload/v1746987996/ai_gj1nf7.png\nBusiness: https://res.cloudinary.com/dh7bfawzs/image/upload/v1746987996/biz_bva84k.png\nDevelopment: https://res.cloudinary.com/dh7bfawzs/image/upload/v1746987996/dev_tthxq0.png\nGTM: https://res.cloudinary.com/dh7bfawzs/image/upload/v1746987996/gtm_dkdaq5.png\nProduct: https://res.cloudinary.com/dh7bfawzs/image/upload/v1746987996/prd_r7mcp1.png\nNews: https://res.cloudinary.com/dh7bfawzs/image/upload/v1746987996/news_z7sveh.png\nFinance: https://res.cloudinary.com/dh7bfawzs/image/upload/v1746987996/fin_fithjh.png\nOther: https://res.cloudinary.com/dh7bfawzs/image/upload/v1746987996/other_j510yw.png\n\n\nDon't translate the content, unless it is not in Hebrew or English. If the content is in Hebrew, leave it in Hebrew.\n\nContent:\n{{ $json.output }}\n\nJSON output structure:\n{\n\t\"Title\": \"title\",\n  \"URL\": \"url\",\n  \"Source Type\": \"title\",\n  \"Author\": \"author\",\n  \"Original Date\": \"title\",\n  \"Summary\": \"summary\",\n  \"Key Points\": \"key_points\",\n  \"Category\": \"category\",\n  \"Topics\": \"topics\",\n  \"Links\": \"links\",\n   \"Insights\": \"insights\",\n   \"Action Items\": \"action_items\",\n   \"Technical Level\": \"technical_level\",\n  \"Estimated Read Time\": \"estimated_read_time\",\n\"Cover Image\": \"cover_image\"\n  \n}",
+        "hasOutputParser": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.6,
+      "position": [
+        540,
+        0
+      ],
+      "id": "8332bcb7-22f1-4fb8-8c69-e03c986cc1e8",
+      "name": "The Parser",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        520,
+        220
+      ],
+      "id": "820fcec0-b7f2-46af-a345-7f3a4b65539f",
+      "name": "OpenAI Chat Model1"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"Title\": \"title\",\n  \"URL\": \"url\",\n  \"Source Type\": \"title\",\n  \"Author\": \"author\",\n  \"Original Date\": \"title\",\n  \"Summary\": \"summary\",\n  \"Key Points\": \"key_points\",\n  \"Category\": \"category\",\n  \"Topics\": \"topics\",\n  \"Links\": \"links\",\n   \"Insights\": \"insights\",\n   \"Action Items\": \"action_items\",\n   \"Technical Level\": \"technical_level\",\n  \"Estimated Read Time\": \"estimated_read_time\",\n  \"Cover Image\": \"cover_image\"\n  \n  \n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        740,
+        220
+      ],
+      "id": "1b162d14-2508-473a-b065-16efb8015a79",
+      "name": "Structured Output Parser"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "The Parser",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "The Parser": {
+      "main": [
+        [
+          {
+            "node": "Notion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "The Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "The Parser",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "983d307b-802e-48a8-b109-88789fad024e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5efb0288440af303acbaf7676d1525bb6d8e3aa84abc0b792c1c36920bc0da6d"
+  },
+  "id": "RlMhW9bAxa4LG035",
+  "tags": []
+}

@@ -1,0 +1,816 @@
+{
+  "name": "AI Daily Newsletter Agentic Flow - Shay Shitrit Shareable",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "// This function will be used in an n8n Code node\nfunction processData(items) {\n  // Process each item from the incoming data\n  for (const item of items) {\n    // Check if contentSnippet exists and clean it\n    if (item.json.contentSnippet) {\n      item.json.contentSnippet = cleanHtmlAndCss(item.json.contentSnippet);\n    }\n    \n    // Check if content exists and clean it\n    if (item.json.content) {\n      item.json.content = cleanHtmlAndCss(item.json.content);\n    }\n  }\n  \n  return items;\n}\n\n// Helper function to clean HTML and CSS content\nfunction cleanHtmlAndCss(text) {\n  // First remove style and script tags with their content\n  text = text.replace(/<style[^>]*>[\\s\\S]*?<\\/style>/gi, '')\n             .replace(/<script[^>]*>[\\s\\S]*?<\\/script>/gi, '');\n  \n  // Remove CSS selector lines (pattern: .selector or #selector)\n  text = text.replace(/\\s*[.#][a-zA-Z0-9_-]+(\\s+[a-zA-Z0-9_>,.#:\\[\\]=\"'\\*\\(\\)^-]+)*\\s*(\\{[^}]*\\})?/g, ' ');\n  \n  // Remove CSS rules that may be outside of style tags\n  text = text.replace(/\\s*\\{[^}]*\\}/g, ' ');\n  \n  // Remove at-rules like @font-face, @media\n  text = text.replace(/@[a-zA-Z-]+[^{]*\\{[\\s\\S]*?\\}/gi, ' ');\n  text = text.replace(/@[a-zA-Z-]*\\s[^;]*;/g, ' ');\n  \n  // Remove HTML tags\n  text = text.replace(/<[^>]*>/g, ' ');\n  \n  // Replace common HTML entities\n  text = text.replace(/&nbsp;/g, ' ')\n             .replace(/&amp;/g, '&')\n             .replace(/&lt;/g, '<')\n             .replace(/&gt;/g, '>')\n             .replace(/&quot;/g, '\"')\n             .replace(/&#39;/g, \"'\");\n  \n  // Remove CSS property specifications (like color: red;)\n  text = text.replace(/[a-zA-Z-]+\\s*:\\s*[^;)]*[;)]/g, ' ');\n  \n  // Remove CSS function calls like format('woff2')\n  text = text.replace(/format\\([^)]*\\)/g, ' ');\n  \n  // Remove remaining CSS-looking content\n  text = text.replace(/url\\([^)]*\\)/g, ' ');\n  \n  // Remove HTML element names on their own line\n  text = text.replace(/^(html|body|div|span|h[1-6]|p|a|img|table|tr|td|th|ul|ol|li|sup)$/gm, ' ');\n  \n  // Remove CSS class and ID selectors that might be on their own line\n  text = text.replace(/^[.#][a-zA-Z0-9_-]+$/gm, ' ');\n  \n  // Remove pseudo elements and classes\n  text = text.replace(/:[a-zA-Z-]+/g, ' ');\n  \n  // Remove media query fragments\n  text = text.replace(/@media\\s+[^{]+/g, ' ');\n  \n  // Remove any lines that look like CSS selector combinations\n  text = text.replace(/^[a-zA-Z0-9_,.\\s#>+~:[\\]=\"'*()-]+$/gm, ' ');\n  \n  // Remove empty braces\n  text = text.replace(/\\{\\s*\\}/g, ' ');\n  \n  // Extra cleanup for common patterns in your example\n  text = text.replace(/:\\s*root/g, ' ')\n             .replace(/\\}\\s*@media/g, ' ')\n             .replace(/screen\\s+and\\s+\\([^)]*\\)/g, ' ');\n  \n  // Clean up multiple spaces, newlines, etc.\n  text = text.replace(/\\s+/g, ' ').trim();\n  \n  // Filter out only text that seems like actual content (longer chunks without typical CSS/HTML patterns)\n  const lines = text.split(/\\s{2,}|[\\n\\r]+/);\n  const contentLines = lines.filter(line => {\n    // Skip short lines that might be CSS selectors or HTML tags\n    if (line.length < 10) return false;\n    \n    // Keep lines that look like natural text\n    return !/^[.#@][a-zA-Z0-9_-]/.test(line) && // Not starting with . # or @\n           !line.includes('{') && \n           !line.includes('}') &&\n           !/^[a-z]+\\s[a-z]+\\s[a-z]+$/.test(line); // Not just three words which might be selector\n  });\n  \n  return contentLines.join(' ').trim();\n}\n\n// Process the incoming items\nreturn processData($input.all());"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        1140
+      ],
+      "id": "04cd8754-51ef-4cc7-a230-0debd65ae953",
+      "name": "Strip HTML from emails"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8,
+              "triggerAtMinute": 30
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -280,
+        680
+      ],
+      "id": "5dc2b192-10e2-4ccc-b0cc-b1ad875ddd4b",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        580,
+        1600
+      ],
+      "id": "9fec8fe3-8603-47ba-bbae-1406cfcd93e6",
+      "name": "OpenAI Chat Model"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "=1",
+        "contextWindowLength": 25
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        760,
+        1580
+      ],
+      "id": "a2e11711-dda4-4a91-b511-c389856cc33f",
+      "name": "Window Buffer Memory"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Search the web for AI news using Tavily",
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendHeaders": true,
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "Authorization",
+              "valueProvider": "fieldValue",
+              "value": "Bearer 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"
+            },
+            {
+              "name": "Content-Type",
+              "valueProvider": "fieldValue",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"query\": \"{searchResult}\"\n}",
+        "placeholderDefinitions": {
+          "values": [
+            {
+              "name": "searchResult",
+              "description": "This is the search result to send to Tavily, to get accurate data back.",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        940,
+        1580
+      ],
+      "id": "cac228d6-64d8-4142-b906-6d1bc6a2d997",
+      "name": "Tavily"
+    },
+    {
+      "parameters": {
+        "url": "https://rss.app/feeds/_g4k2gwR2SeTvwOoF.xml",
+        "options": {
+          "ignoreSSL": false
+        }
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        1140
+      ],
+      "id": "4577c93b-2f38-4eef-9a63-631269d83a14",
+      "name": "RSS: ניוזלטרים - AI"
+    },
+    {
+      "parameters": {
+        "url": "https://rss.app/feeds/tao6AyV6imCcWfQ4.xml",
+        "options": {
+          "ignoreSSL": false
+        }
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        440
+      ],
+      "id": "5c58e5bb-267f-4a04-95e5-5d4747272a8b",
+      "name": "חדשות - אנטרופיק"
+    },
+    {
+      "parameters": {
+        "url": "https://www.calcalist.co.il/GeneralRSS/0,16335,L-3928,00.xml",
+        "options": {
+          "ignoreSSL": false
+        }
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        600
+      ],
+      "id": "b8aad726-2757-414a-bccf-7a5d161e9fbf",
+      "name": "כלכליסט - VC"
+    },
+    {
+      "parameters": {
+        "url": "https://rss.app/feeds/sjcgcRPtHbeXRb7e.xml",
+        "options": {
+          "ignoreSSL": false
+        }
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        300
+      ],
+      "id": "0ef035d5-09ab-4689-a5b1-b82ef3374088",
+      "name": "טוויטר: אנטרופיק + openai"
+    },
+    {
+      "parameters": {
+        "url": "https://rss.app/feeds/qs0IJxqKoAHZXF8M.xml",
+        "options": {
+          "ignoreSSL": false
+        }
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        760
+      ],
+      "id": "63c47487-4a84-4f76-b775-4df4362d873f",
+      "name": "טוויטר: סאם אלטמן"
+    },
+    {
+      "parameters": {
+        "url": "https://rss.app/feeds/v75wVkfMwMtgWNlA.xml",
+        "options": {
+          "ignoreSSL": false
+        }
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        920
+      ],
+      "id": "590b5866-5628-427f-a1b2-ebaec06353eb",
+      "name": "טוויטר: אילון מאסק"
+    },
+    {
+      "parameters": {
+        "url": "https://www.wired.com/feed/tag/ai/latest/rss",
+        "options": {
+          "ignoreSSL": false
+        }
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "52ce56ea-4fa2-4c6d-88ef-a62b058481da",
+      "name": "חדשות: wired ai"
+    },
+    {
+      "parameters": {
+        "model": "=claude-3-7-sonnet-20250219",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.2,
+      "position": [
+        960,
+        900
+      ],
+      "id": "0fc1b490-b310-4f8b-bae3-3aa58ea7bf1e",
+      "name": "Anthropic Chat Model"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "sdsadsadadsad"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1080,
+        900
+      ],
+      "id": "dcd8fa3a-8624-4ea9-8eae-c22e32faecf0",
+      "name": "Window Buffer Memory1"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are a helpful and intelligent AI assistant that summarizes AI news into a single message sent out to the user 1x a day - for a newletter called CathUpAI. This message should consist of the input you recieve, but summarized into a reasonably short text that the user can glance over to get up to date on the lates AI news.\n\n\nThe output should conisist of only the summarized text and nothing else, in one string.\n\nToday's date is: {{ $now }}\n\nOutput example:\n**MM-DD-YYYY AI news summary🚀**\n🔍 OpenAI expands Deep Research\nOpenAI's Deep Research, a powerful web-browsing tool for generating in-depth reports, is now available to all paying ChatGPT users (Plus, Team, Enterprise, Edu). Previously, this feature was locked behind a $200/month Pro plan. (10 queries/month limit applies). [Read more here](https://example.com)\n\n🧠 Anthropic's Claude 3.7 Sonnet debuts as the first ‘hybrid reasoning’ AI\nAnthropic has unveiled Claude 3.7 Sonnet, designed for both fast responses and complex reasoning. Available via API, Amazon Bedrock, and Google Cloud's Vertex AI, it combines multiple AI capabilities into a single model. [Learn more here] (https://example.com)\n\n💻 Google launches free AI coding assistant\nGoogle’s Gemini Code Assist now offers individual developers 180,000 free code completions/month, vastly exceeding GitHub Copilot’s free plan. This AI helps with debugging, code generation, and explanations. [More details here] (https://example.com)\n\n🤝 Salesforce & Google expand AI partnership\nSalesforce is integrating Google’s Gemini AI models into Agentforce, improving AI-driven customer service and real-time data analytics on Google Cloud. This marks a major shift in enterprise AI deployment. [Read about it here] (https://example.com)\n",
+              "role": "system"
+            },
+            {
+              "content": "=Here's the unformatted summary:\n\n{{ $json.summary }}"
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 3000
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1000,
+        1120
+      ],
+      "id": "ac21ca59-948f-4502-af4a-cf89b364ec87",
+      "name": "סיכום ניוזלטרים",
+      "credentials": {
+        "openAiApi": {
+          "id": "9afFHVGDQ8srWY7U",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=קח את כל המידע שיש למטה ותכין ממנו הודעת ניוזלטר מסודרת ואינפורמטיבית שתישלח למנויים  \nתחלק את ההודעה לנושאים מובנים:\nטוויטר | כתבות | וכו׳...\nעבור כל תוכן שאתה מחליט שחשוב ומעניין בשביל להכניס תוסיף בסוף לינק לתוכן - קישור (לינק)\nההודעה צריכה להכיל מידע עבור תכנים שהחלטת להכניס, לא כל התוכן, ולא מעט מידי. \n\nעוד הוראות:\n- ההודעה חייבת להיות בעברית. קהל היעד הוא קוראי עברית בלבד\n- כותרת:\nניוזלטר AI יומי - CatchUpAI\nתאריך: {{ $now }}\nחשוב:\nכל הודעה חייבת להיות פחות מ 3700 תווים.\nאסור לעבור את הגבול הזה  \nתספור את מספר התוים לפני שאתה שולח את ההודעה ותוודא שאתה עומד בהגדרה הזו\nאל תצרף את כמות התווים להודעה עצמה \nאתה יכול לשלוח עד 2 הודעות מקסימום - אחת אחרי השניה. שלח הודעה ראשונה ואז לאחר מכן תשלח הודעה שניה שממשיכה אותה  אל תחזור על המידע בין הודעה להודעה. תאחסן בזיכרון את ההודעות אם צריך לפני שאתה שולח\n\n{{ $('סיכום ניוזלטרים').first().json.message.content }}\n\n{{ $('העברה לשדה אחד').first().json.tweets }}\n",
+        "options": {
+          "maxIterations": 3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        1000,
+        680
+      ],
+      "id": "120becb6-1d8b-4ff2-a33a-c109bfa1d7c0",
+      "name": "אייג׳נט: הכנת הסיכום"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Email title: {{ $json.title }}\nSent date: {{ $json.pubDate }}\nContent: {{ $json.content }}\n\n\nToday's date: {{ $today }}",
+        "options": {
+          "systemMessage": "=# Overview  \nYou are an AI agent responsible for analyzing AI-related email newsletters and determining whether they align with the user's interest in AI advancements. If the newsletter content meets the criteria, you **must call the Tavily tool** to gather more information. If it does not align, you will return: **\"NO RELEVANT AI NEWS FOUND\"**.  \n\n## Context  \n- The user wants the **latest AI news**, with a focus on **viral potential, major AI model releases, and significant industry updates**.  \n- The AI agent should **prevent redundancy** by checking if similar information has been processed before.  \n- **You must always perform at least one Tavily search when relevant news is detected.**  \n\n## Tools  \n- **Tavily (for web search)**  \n\n## Instructions  \n\n1. **Extract Content**  \n   - Analyze incoming AI email newsletters.  \n   - Identify whether the content aligns with the user's interest in AI trends.  \n\n2. **Determine Relevance**  \n   - If the content is about **significant AI developments** (e.g., **new model releases, major updates, viral AI trends**), **proceed to the next step**.  \n   - If the content is **irrelevant** (e.g., promotions, referral programs, basic AI tool reviews), return: **\"NO RELEVANT AI NEWS FOUND\"**.  \n\n3. **Mandatory Tavily Search for Relevant Topics**  \n   - **If relevant news is found, immediately call Tavily** to search for more details.  \n   - **Perform multiple searches** if necessary to obtain a **complete and factual summary**.  \n   - **Do not stop after one search unless the result is clear, accurate, and sufficient**.  \n   - Example search queries:  \n     - \"Latest AI model release [Model Name]\"  \n     - \"Breakthrough AI trends [Current Year]\"  \n     - \"AI company announcements [Company Name]\"  \n\n4. **Check for Redundancy**  \n   - **Cross-check memory** to avoid processing duplicate news.  \n   - If duplicate content is detected, **skip redundant Tavily searches**.  \n\n5. **Format and Output Findings**  \n   - **Always return a single string (no JSON formatting)**.  \n   - Structure the output in a clean and readable format.  \n   - Include **summarized AI news and Tavily-retrieved links** for further reading.  \n   - **Ensure the output is structured in this format:**  \n\n---\n\n## **Output Format (Strict String Format)**  \n```plaintext\n**AI News Update**  \n\n**[Headline 1]**  \nSummary: [Summary].  \n🔗 Read more: [link1], [link2]  \n\n**[Headline 2]**  \nSummary: [Summary].  \n🔗 Read more: [link1], [link2]  \n\n(If no relevant news is found, return only: **\"NO RELEVANT AI NEWS FOUND\"**)  \n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        700,
+        1340
+      ],
+      "id": "0f306071-5365-4059-a0da-d9d2ce239342",
+      "name": "אייג׳נט: חילוץ מידע מניוזלטרים",
+      "retryOnFail": false,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "https://rss.app/feeds/eBDxQturkntO4C3S.xml",
+        "options": {
+          "ignoreSSL": false
+        }
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        160
+      ],
+      "id": "5afbb8c1-7c3a-4205-8438-7363c70ba6b8",
+      "name": "חדשות: אייג׳נטים"
+    },
+    {
+      "parameters": {
+        "numberInputs": 7
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        320,
+        560
+      ],
+      "id": "c9936d6b-2acc-4497-9594-29710a72fe57",
+      "name": "חיבור הפידים"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n    json: {\n        tweets: items.map(item => \n            `**${item.json.creator}**: ${item.json.contentSnippet}\\n🔗 ${item.json.link}`\n        ).join(\"\\n\\n\")\n    }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        500,
+        660
+      ],
+      "id": "bcf5ce2a-0806-4787-a695-cbfc3271287d",
+      "name": "העברה לשדה אחד"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "fieldsToMatchString": "field",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        780,
+        680
+      ],
+      "id": "c3eb3097-6136-4982-9b9d-35336e4871b9",
+      "name": "חיבור שני הענפים",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        560,
+        1140
+      ],
+      "id": "5c24477d-ce1a-4611-bf23-3f03b9848968",
+      "name": "לולאה עבור כל הניוזלטרים"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Function to process the news data and create a summary\nfunction processData(items) {\n  try {\n    // Initialize the summary string\n    let summary = \"# AI NEWS SUMMARY\\n\\n\";\n    let foundItems = false;\n    \n    // Process each item in the input\n    for (const item of items) {\n      // Access the output property directly in the json object\n      if (item.json && item.json.output) {\n        foundItems = true;\n        \n        // If output is a string (not an array), add it directly to the summary\n        if (typeof item.json.output === 'string') {\n          // Add the output content to our summary\n          if (item.json.output === \"NO RELEVANT AI NEWS FOUND\") {\n            // Handle the \"NO RELEVANT AI NEWS FOUND\" case specially\n            summary += \"## No Relevant News\\n\";\n            summary += \"No relevant AI news was found for this query.\\n\\n\";\n          } else {\n            // Add the regular output\n            summary += item.json.output + \"\\n\\n\";\n          }\n        } \n        // Handle the case where output is an array (from your previous structure)\n        else if (Array.isArray(item.json.output)) {\n          // Loop through each news item in the output array\n          for (const newsItem of item.json.output) {\n            if (newsItem.newsSumary) {\n              // Add the news summary to our string\n              summary += `## News Item\\n${newsItem.newsSumary}\\n\\n`;\n              \n              // Check if there are links and add them\n              if (newsItem.links && Array.isArray(newsItem.links)) {\n                summary += \"### Sources:\\n\";\n                for (const link of newsItem.links) {\n                  summary += `- ${link}\\n`;\n                }\n                summary += \"\\n\";\n              }\n            }\n          }\n        }\n      }\n    }\n    \n    // If no news items were found, add a note\n    if (!foundItems) {\n      summary += \"No news items found in the provided data.\\n\";\n    }\n    \n    // Return the summary in the correct format for n8n\n    return [{\n      json: {\n        summary: summary\n      }\n    }];\n    \n  } catch (error) {\n    // Handle any errors\n    return [{\n      json: {\n        summary: \"Error processing data: \" + error.message,\n        error: true\n      }\n    }];\n  }\n}\n\n// Call the function with the input data\nreturn processData($input.all());"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        820,
+        1120
+      ],
+      "id": "f601a153-cccc-457f-bdcc-159f16ba068d",
+      "name": "חיבור לשדה אחד"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "411f7e17-e54f-4e91-a330-2b9102921a85",
+              "name": "message",
+              "value": "={{ $json.output }}\n\n\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1340,
+        680
+      ],
+      "id": "77ed6d93-fbc7-4027-aab8-0736b36118d7",
+      "name": "הגדרת שדה ההודעה"
+    },
+    {
+      "parameters": {
+        "chatId": "6194909717",
+        "text": "={{ $json.message }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1520,
+        680
+      ],
+      "id": "34926890-eb4e-42c3-85e0-552b90864704",
+      "name": "שליחת הודעה",
+      "webhookId": "7bd1fc49-2bd7-4756-b46d-08da911b1435",
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "content": "# CatchUpAI - ניוזלטר יומי אישי\nפרופיל הלינקדאין שלי  [לינק](https://www.linkedin.com/in/shayshitrit/)\nהפוסט על הפלואו והאייג׳נטים [לינק](https://www.linkedin.com/feed/update/urn:li:activity:7307674569962590208/) \n\nהפלואו הבא בשילוב האייג׳נטים נבנה כדי לעזור לאנשים להתייעל הן בזמן שהם מבלים בחיפוש מידע ובין במציאת מידע מדויק ומתאים עבורם. \n\nn8n היא לא פלטפורמה פשוטה ודורשת ידע טכני והבנה של צורת בניית הפלואוים ועבודה עם אייג׳נטים ו API\n\n## הוראות\n- יש להוסיף את פרטי הגישה שלכם עבור\nOpenAI , Anthropic , Tavily\n-  לחבר את הפלואו לחשבון הטלגרם שלכם\nהצעד הזה יכול להיות קצת מורכב - ואם מתקשים אפשר להמיר בשליחת אימייל לדוגמא\n\n## התאמה אישית\n- הפלואו מוגדר עם מקורות מידע שאני שמתי על נושאים שמעניינים אותי - תוריד או תוסיפו מקורות ככל העולה על רוחכם\n- האייג׳נטים בפלואו מכילים פרומפטים שרלוונטיים למה שמעניין אותי - תתאימו אותם אליכם\n\n## מה עוד?\nהפלואו הזה יכול להיות עוד יותר חזק, עם התאמות אישיות, חיבור למקורות מידע אישיים כמו אימייל או סלאק או וואטסאפ לדוגמא.\nזה יכול להיות מוטרג לפי זמן או לפי תנאי מסוים. \nתרגישו חופשי להתנסות ולשנות. \nJUST DO IT\n",
+        "height": 720,
+        "width": 560,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -880,
+        80
+      ],
+      "typeVersion": 1,
+      "id": "a8f76ea7-dea4-4f92-81e1-7aec808ce389",
+      "name": "Sticky Note2"
+    }
+  ],
+  "pinData": {
+    "Schedule Trigger": [
+      {
+        "json": {
+          "timestamp": "2025-03-12T21:57:03.585+02:00",
+          "Readable date": "March 12th 2025, 9:57:03 pm",
+          "Readable time": "9:57:03 pm",
+          "Day of week": "Wednesday",
+          "Year": "2025",
+          "Month": "March",
+          "Day of month": "12",
+          "Hour": "21",
+          "Minute": "57",
+          "Second": "03",
+          "Timezone": "Asia/Jerusalem (UTC+02:00)"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Strip HTML from emails": {
+      "main": [
+        [
+          {
+            "node": "לולאה עבור כל הניוזלטרים",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "אייג׳נט: חילוץ מידע מניוזלטרים",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "אייג׳נט: חילוץ מידע מניוזלטרים",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tavily": {
+      "ai_tool": [
+        [
+          {
+            "node": "אייג׳נט: חילוץ מידע מניוזלטרים",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "טוויטר: סאם אלטמן",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "טוויטר: אילון מאסק",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS: ניוזלטרים - AI",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "כלכליסט - VC",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "חדשות - אנטרופיק",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "טוויטר: אנטרופיק + openai",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "חדשות: wired ai",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "חדשות: אייג׳נטים",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS: ניוזלטרים - AI": {
+      "main": [
+        [
+          {
+            "node": "Strip HTML from emails",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "חדשות - אנטרופיק": {
+      "main": [
+        [
+          {
+            "node": "חיבור הפידים",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "כלכליסט - VC": {
+      "main": [
+        [
+          {
+            "node": "חיבור הפידים",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "טוויטר: אנטרופיק + openai": {
+      "main": [
+        [
+          {
+            "node": "חיבור הפידים",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "טוויטר: סאם אלטמן": {
+      "main": [
+        [
+          {
+            "node": "חיבור הפידים",
+            "type": "main",
+            "index": 5
+          }
+        ]
+      ]
+    },
+    "טוויטר: אילון מאסק": {
+      "main": [
+        [
+          {
+            "node": "חיבור הפידים",
+            "type": "main",
+            "index": 6
+          }
+        ]
+      ]
+    },
+    "חדשות: wired ai": {
+      "main": [
+        [
+          {
+            "node": "חיבור הפידים",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "אייג׳נט: הכנת הסיכום",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "אייג׳נט: הכנת הסיכום",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "סיכום ניוזלטרים": {
+      "main": [
+        [
+          {
+            "node": "חיבור שני הענפים",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "אייג׳נט: הכנת הסיכום": {
+      "main": [
+        [
+          {
+            "node": "הגדרת שדה ההודעה",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "אייג׳נט: חילוץ מידע מניוזלטרים": {
+      "main": [
+        [
+          {
+            "node": "לולאה עבור כל הניוזלטרים",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "חדשות: אייג׳נטים": {
+      "main": [
+        [
+          {
+            "node": "חיבור הפידים",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "חיבור הפידים": {
+      "main": [
+        [
+          {
+            "node": "העברה לשדה אחד",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "העברה לשדה אחד": {
+      "main": [
+        [
+          {
+            "node": "חיבור שני הענפים",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "חיבור שני הענפים": {
+      "main": [
+        [
+          {
+            "node": "אייג׳נט: הכנת הסיכום",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "לולאה עבור כל הניוזלטרים": {
+      "main": [
+        [
+          {
+            "node": "חיבור לשדה אחד",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "אייג׳נט: חילוץ מידע מניוזלטרים",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "חיבור לשדה אחד": {
+      "main": [
+        [
+          {
+            "node": "סיכום ניוזלטרים",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "הגדרת שדה ההודעה": {
+      "main": [
+        [
+          {
+            "node": "שליחת הודעה",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "db36ece6-cdd4-4ae5-81ce-e33562ba1b13",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5efb0288440af303acbaf7676d1525bb6d8e3aa84abc0b792c1c36920bc0da6d"
+  },
+  "id": "OEAtam5joNrIOpqR",
+  "tags": [
+    {
+      "createdAt": "2025-03-12T20:39:26.899Z",
+      "updatedAt": "2025-03-12T20:39:26.899Z",
+      "id": "eEoCh1ysG8WwEFuJ",
+      "name": "production"
+    }
+  ]
+}

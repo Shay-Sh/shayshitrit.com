@@ -1,0 +1,1077 @@
+{
+  "name": "ShortFactory - To Share",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d87ca56a-053a-4d72-9223-bb9cc90fbd52",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"idea\": [\n    \"Moments When Brilliant Ideas Strike (And How to Capture Them)\"\n  ]\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        600,
+        300
+      ],
+      "id": "387b309d-746d-4dfc-a47b-c49b87cf2f2d",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 10
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        220
+      ],
+      "id": "ca5bc293-420f-401c-94a4-ae31405544fb",
+      "name": "Schedule Trigger1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-3-7-sonnet-20250219",
+          "mode": "list",
+          "cachedResultName": "Claude 3.7 Sonnet"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        220,
+        300
+      ],
+      "id": "80cdb10c-4277-454e-a68b-96bbe639f88c",
+      "name": "Anthropic Chat Model"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "documentURL": "1Tz6R17Ey7fNZxvPUOgAMRKV7w7h_Mq2gb_9y-6M0oGY"
+      },
+      "type": "n8n-nodes-base.googleDocsTool",
+      "typeVersion": 2,
+      "position": [
+        360,
+        300
+      ],
+      "id": "291f79de-6d89-4b62-8608-962de9e2c6bc",
+      "name": "brand-brief"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1kRD5Oa6v97vy5XgQLoUWSZVgKy6qgTUi3PZgxRvqmz8",
+          "mode": "list",
+          "cachedResultName": "noteclear-ideas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kRD5Oa6v97vy5XgQLoUWSZVgKy6qgTUi3PZgxRvqmz8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kRD5Oa6v97vy5XgQLoUWSZVgKy6qgTUi3PZgxRvqmz8/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [
+        480,
+        320
+      ],
+      "id": "3ea31a42-fb58-4b12-a661-5b97daed8b17",
+      "name": "past-videos"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-3-5-haiku-20241022",
+          "mode": "list",
+          "cachedResultName": "Claude 3.5 Haiku"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        840,
+        280
+      ],
+      "id": "1de6556c-4c21-41b7-8b48-86056617bdd4",
+      "name": "Anthropic Chat Model1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1kRD5Oa6v97vy5XgQLoUWSZVgKy6qgTUi3PZgxRvqmz8",
+          "mode": "list",
+          "cachedResultName": "noteclear-ideas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kRD5Oa6v97vy5XgQLoUWSZVgKy6qgTUi3PZgxRvqmz8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WiP9AicckkynsK8E_CUqSh_IvEy5bJMtXr4qHo-Kf78/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Subject": "={{ $json.output.idea }}",
+            "Creation Status": "To Do",
+            "Posting Status": "To Do"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Subject",
+              "displayName": "Subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Creation Status",
+              "displayName": "Creation Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Posting Status",
+              "displayName": "Posting Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Video URL",
+              "displayName": "Video URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Youtube URL",
+              "displayName": "Youtube URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        700,
+        80
+      ],
+      "id": "017b3e14-d753-4704-80fc-2b13a224b573",
+      "name": "💡 Add new idea"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Generate some ideas\nStart by getting the context from the following tools:\nbrand-brief : brief of the brand. important information about the brand and the story of the brand\npast-videos : list of past videos we published under the brand of noteclear.io",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=# Overview\nYou are an AI that generates a creative and engaging subject idea for a short (30-second) motivational video that aligns with noteclear.io's brand identity. The app helps users capture spoken thoughts and transform them into organized, actionable insights.\n\nReturn a single subject/theme for a YouTube Shorts video that would appeal to knowledge workers seeking mental clarity and productivity. The theme should be 2-4 words long, be timeless, and relate to thought organization, productivity breakthroughs, or mental clarity.\n\nFocus on concepts that showcase how voice-to-text and AI organization can transform scattered thinking into clear action. The subject should support noteclear.io's mission of empowering users to effortlessly capture and enhance their thinking.\n\nThis theme should be suitable for dividing into 3 sequential parts for a 30-second video (approximately 10 seconds per part).\n\nOutput only the subject idea, with no extra explanation.\nOnly 1 idea should come out of this step."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        320,
+        80
+      ],
+      "id": "c96d8c18-b891-4263-8ab5-4a0b642e2bc2",
+      "name": "🔥 Idea Starter"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Subject: {{ $json.Subject }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=# Overview\nYou are a creative assistant that helps generate engaging content for 30-second motivational videos for noteclear.io - a voice-to-text AI app that helps transform spoken thoughts into organized insights. Your job is to take the subject you get and create a 3-part script with corresponding image prompts.\nThis video should not be about noteclear spesificlly. It should push the viewers to want to be better, and if they will see our profile and product they will know we can help them be better. This video is not about our product.\n\n## Instructions\nAlways start by calling the brand-brief tool and read the brand brief.\nGenerate a 3-part script that tells a cohesive story about the given subject. Each part should be approximately 10 seconds of content. The first part should serve as both introduction and problem statement.\nAll images should be suitable for youtube shorts, which means vertical aspect ratio of 9:16.\nMake all images nice to watch, not to overwhelmin, calm and pleasant, and above all inspiring.\n\nYour output must follow this exact JSON structure:\n{\n  \"Part1VoiceoverText\": \"[PART1_VOICEOVER_TEXT]\",\n  \"Part1ImagePrompt\": \"[PART1_IMAGE_PROMPT]\",\n  \"Part2VoiceoverText\": \"[PART2_VOICEOVER_TEXT]\",\n  \"Part2ImagePrompt\": \"[PART2_IMAGE_PROMPT]\",\n  \"Part3VoiceoverText\": \"[PART3_VOICEOVER_TEXT]\",\n  \"Part3ImagePrompt\": \"[PART3_IMAGE_PROMPT]\"\n}\n\nFor each part, create:\n\n1) Part1VoiceoverText (approximately 10 seconds) – An engaging introduction that hooks viewers and presents the problem or challenge related to the subject. Make this emotionally resonant and relatable to knowledge workers.\n\n2) Part1ImagePrompt – A compelling visual representation of the problem. Create a detailed, high-quality image prompt that clearly conveys the idea.\n\n3) Part2VoiceoverText (approximately 10 seconds) – The transformation or solution point. Focus on the power of speaking thoughts aloud and how this creates immediate structure and clarity.\n\n4) Part2ImagePrompt – A visual showing the transformation in progress. This should be visually striking and clearly show the process of progress.\n\n5) Part3VoiceoverText (approximately 10 seconds) – The benefit and call-to-action that promotes noteclear.io. Emphasize how capturing spoken thoughts leads to better productivity, creativity, and mental clarity.\n\n6) Part3ImagePrompt – A visual showing the final benefit. This should leave viewers motivated and happy.\n\n## Guidance for Quality Content\n- Make each voiceover segment exactly the right length for a 10-second clip (approximately 20-25 words)\n- Create a clear progression across the three parts: problem → solution → benefit\n- Use vivid, evocative language in both voiceover and image prompts\n- Ensure image prompts are detailed enough to generate high-quality, specific visuals\n- Maintain a consistent character or scene across all three images to show transformation\n- Use language that appeals to professionals who struggle with information overload\n- Balance inspiration with practicality - show real benefits, not just motivational platitudes\n- Subtly incorporate noteclear.io's core value proposition of transforming spoken thoughts into organized insights\n- all images should be vertical aspect ratios of 9:16\n- all images should be fun and engaging to watch. not overwhelming, not blunt."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        900,
+        80
+      ],
+      "id": "73220c1e-d227-4f95-b34d-9085c0ef1bf8",
+      "name": "✍️ Content creator",
+      "retryOnFail": true,
+      "waitBetweenTries": 3000
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.json2video.com/v2/movies",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"template\": \"Da4bm9efJlCLlEA4cTg9\",\n  \"variables\": {\n    \"title\": \"{{ $('💡 Add new idea').item.json.Subject[0] }}\",\n    \"voiceModel\": \"elevenlabs\",\n    \"voice.ConnectionID\": \"elevenlabs-connection\",\n    \"voiceID\": \"NOpBlnGInO9m6vDvFkFC\",\n    \"imageModel\": \"flux-pro\",\n    \"Part1ImagePrompt\": \"{{ $json.output.Part1ImagePrompt }}\",\n    \"Part1VoiceoverText\": \"{{ $json.output.Part1VoiceoverText }}\",\n    \"Part2ImagePrompt\": \"{{ $json.output.Part2ImagePrompt }}\",\n    \"Part2VoiceoverText\": \"{{ $json.output.Part2VoiceoverText }}\",\n    \"Part3ImagePrompt\": \"{{ $json.output.Part3ImagePrompt }}\",\n    \"Part3VoiceoverText\": \"{{ $json.output.Part3VoiceoverText }}\"\n    \n  }\n}",
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1240,
+        80
+      ],
+      "id": "a74e4eea-b6bd-47a1-b72d-9ce14666ca3d",
+      "name": "🎥 Generate video",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "tV5EmF3XEIwTcc6u",
+          "name": "json2avi-dummy"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 10
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        920,
+        980
+      ],
+      "id": "3e6552bf-2f1a-42fb-a01b-a302f01c588d",
+      "name": "It's not ready - yet",
+      "webhookId": "3922e8b8-aa6c-44c3-9773-49b59d59bb53"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1kRD5Oa6v97vy5XgQLoUWSZVgKy6qgTUi3PZgxRvqmz8",
+          "mode": "list",
+          "cachedResultName": "noteclear-ideas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kRD5Oa6v97vy5XgQLoUWSZVgKy6qgTUi3PZgxRvqmz8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WiP9AicckkynsK8E_CUqSh_IvEy5bJMtXr4qHo-Kf78/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Subject": "={{ $('💡 Add new idea').item.json.Subject }}",
+            "Creation Status": "Error"
+          },
+          "matchingColumns": [
+            "Subject"
+          ],
+          "schema": [
+            {
+              "id": "Subject",
+              "displayName": "Subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Creation Status",
+              "displayName": "Creation Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Posting Status",
+              "displayName": "Posting Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Video URL",
+              "displayName": "Video URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        920,
+        820
+      ],
+      "id": "2bdadc52-a1be-4877-9877-c30e45a58f24",
+      "name": "Log error"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1kRD5Oa6v97vy5XgQLoUWSZVgKy6qgTUi3PZgxRvqmz8",
+          "mode": "list",
+          "cachedResultName": "noteclear-ideas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kRD5Oa6v97vy5XgQLoUWSZVgKy6qgTUi3PZgxRvqmz8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WiP9AicckkynsK8E_CUqSh_IvEy5bJMtXr4qHo-Kf78/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Subject": "={{ $('💡 Add new idea').item.json.Subject[0] }}",
+            "Creation Status": "Created",
+            "Video URL": "={{ $('Are you ready?').item.json.movie.url }}"
+          },
+          "matchingColumns": [
+            "Subject"
+          ],
+          "schema": [
+            {
+              "id": "Subject",
+              "displayName": "Subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Creation Status",
+              "displayName": "Creation Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Posting Status",
+              "displayName": "Posting Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Video URL",
+              "displayName": "Video URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Youtube URL",
+              "displayName": "Youtube URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        920,
+        500
+      ],
+      "id": "b5534372-2ec2-4a9a-96af-1180e7d560c1",
+      "name": "Update video status",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Are you ready?').item.json.movie.url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        920,
+        660
+      ],
+      "id": "9d1c221a-890a-4db5-a513-a0687a576dcd",
+      "name": "Download the video"
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "upload",
+        "title": "=noteclear.io: {{ $('💡 Add new idea').item.json.Subject[0] }}",
+        "regionCode": "US",
+        "categoryId": "1",
+        "options": {
+          "description": "=noteclear.io:{{ $('✍️ Content creator').item.json.output.Part1VoiceoverText }}  #shorts",
+          "privacyStatus": "unlisted"
+        }
+      },
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        660
+      ],
+      "id": "62124b44-1d6a-48de-90b0-55c4376868df",
+      "name": "Upload to YouTube"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1kRD5Oa6v97vy5XgQLoUWSZVgKy6qgTUi3PZgxRvqmz8",
+          "mode": "list",
+          "cachedResultName": "noteclear-ideas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kRD5Oa6v97vy5XgQLoUWSZVgKy6qgTUi3PZgxRvqmz8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kRD5Oa6v97vy5XgQLoUWSZVgKy6qgTUi3PZgxRvqmz8/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Subject": "={{ $('💡 Add new idea').item.json.Subject }}",
+            "Posting Status": "=Unlisted"
+          },
+          "matchingColumns": [
+            "Subject"
+          ],
+          "schema": [
+            {
+              "id": "Subject",
+              "displayName": "Subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Creation Status",
+              "displayName": "Creation Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Posting Status",
+              "displayName": "Posting Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Video URL",
+              "displayName": "Video URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Youtube URL",
+              "displayName": "Youtube URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1320,
+        660
+      ],
+      "id": "9460893a-cd4d-46d6-9337-37a1c581d3c5",
+      "name": "Update status"
+    },
+    {
+      "parameters": {
+        "url": "https://api.json2video.com/v2/movies",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "project",
+              "value": "={{ $('🎥 Generate video').item.json.project }}"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        40,
+        700
+      ],
+      "id": "78d7b1ad-4209-410a-bc35-45f563f52df1",
+      "name": "Are you ready?",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "tV5EmF3XEIwTcc6u",
+          "name": "json2avi-dummy"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5b858d82-0a7c-44ea-940b-ae83a7c22f3c",
+                    "leftValue": "={{ $json.movie.status }}",
+                    "rightValue": "done",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Done"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.movie.status }}",
+                    "rightValue": "error",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "2e627457-06c8-411e-b6e0-f2e0207a3882"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Error"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "6ebbf3c8-599e-451d-acf6-4e63fef69ae0",
+                    "leftValue": "={{ $json.movie.status }}",
+                    "rightValue": "running",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Running"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e22298ac-6f08-4f73-a361-768a17ea9a3a",
+                    "leftValue": "={{ $json.movie.status }}",
+                    "rightValue": "preparing",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Preparing"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        320,
+        680
+      ],
+      "id": "12115d80-91a8-47df-8f5c-f7717f72c90d",
+      "name": "The switch"
+    },
+    {
+      "parameters": {
+        "amount": 100
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1420,
+        300
+      ],
+      "id": "eb613f95-1c1f-4852-a631-d7247ce7f4f2",
+      "name": "✋ Wait 100 sec",
+      "webhookId": "3922e8b8-aa6c-44c3-9773-49b59d59bb53"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"Part1VoiceoverText\": \"[PART1_VOICEOVER_TEXT]\",\n  \"Part1ImagePrompt\": \"[PART1_IMAGE_PROMPT]\",\n  \"Part2VoiceoverText\": \"[PART2_VOICEOVER_TEXT]\",\n  \"Part2ImagePrompt\": \"[PART2_IMAGE_PROMPT]\",\n  \"Part3VoiceoverText\": \"[PART3_VOICEOVER_TEXT]\",\n  \"Part3ImagePrompt\": \"[PART3_IMAGE_PROMPT]\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        1160,
+        300
+      ],
+      "id": "ba1ea4a0-0486-4628-94aa-0005a8c7baa4",
+      "name": "Parser"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "documentURL": "1Tz6R17Ey7fNZxvPUOgAMRKV7w7h_Mq2gb_9y-6M0oGY"
+      },
+      "type": "n8n-nodes-base.googleDocsTool",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        300
+      ],
+      "id": "e2660e8f-5e1e-43cc-8fd9-4dec960017e7",
+      "name": "brand-brief2"
+    }
+  ],
+  "pinData": {
+    "When clicking ‘Test workflow’": [
+      {
+        "json": {}
+      }
+    ]
+  },
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "🔥 Idea Starter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "🔥 Idea Starter",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger1": {
+      "main": [
+        [
+          {
+            "node": "🔥 Idea Starter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "🔥 Idea Starter",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "brand-brief": {
+      "ai_tool": [
+        [
+          {
+            "node": "🔥 Idea Starter",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "past-videos": {
+      "ai_tool": [
+        [
+          {
+            "node": "🔥 Idea Starter",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "✍️ Content creator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "💡 Add new idea": {
+      "main": [
+        [
+          {
+            "node": "✍️ Content creator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔥 Idea Starter": {
+      "main": [
+        [
+          {
+            "node": "💡 Add new idea",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "✍️ Content creator": {
+      "main": [
+        [
+          {
+            "node": "🎥 Generate video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🎥 Generate video": {
+      "main": [
+        [
+          {
+            "node": "✋ Wait 100 sec",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "It's not ready - yet": {
+      "main": [
+        [
+          {
+            "node": "Are you ready?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download the video": {
+      "main": [
+        [
+          {
+            "node": "Upload to YouTube",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload to YouTube": {
+      "main": [
+        [
+          {
+            "node": "Update status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Are you ready?": {
+      "main": [
+        [
+          {
+            "node": "The switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "The switch": {
+      "main": [
+        [
+          {
+            "node": "Update video status",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Download the video",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log error",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "It's not ready - yet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "It's not ready - yet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "✋ Wait 100 sec": {
+      "main": [
+        [
+          {
+            "node": "Are you ready?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "✍️ Content creator",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "brand-brief2": {
+      "ai_tool": [
+        [
+          {
+            "node": "✍️ Content creator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "cf673c83-e0be-42f0-b525-0b9eb59fcd7b",
+  "meta": {
+    "instanceId": "5efb0288440af303acbaf7676d1525bb6d8e3aa84abc0b792c1c36920bc0da6d"
+  },
+  "id": "ArP4X9kbON0JzdWo",
+  "tags": []
+}

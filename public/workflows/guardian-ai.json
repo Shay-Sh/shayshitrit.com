@@ -1,0 +1,577 @@
+{
+  "name": "Gurdian_AI",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "YourWhatsappFlow",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        1664,
+        400
+      ],
+      "id": "600cc407-5207-4c3d-a2a2-dfd1e815bb0e",
+      "name": "Webhook",
+      "webhookId": "1d63d829-c125-4c06-90be-0b6091b7ee93"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.messageData.fileMessageData.downloadUrl }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "eadcb52d-d3af-4ff8-a146-c7844240f97a"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "21d4be88-edc4-46d1-8ea6-225c250c5147",
+                    "leftValue": "={{ $json.body.messageData.textMessageData.textMessage }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d9994f18-e036-442f-94e1-f7ce3ab8f9c8",
+                    "leftValue": "={{ $json.body.messageData.extendedTextMessageData.text }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1952,
+        384
+      ],
+      "id": "deb1dbae-172f-4d08-a8ad-5f29fc7b4726",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{ \n\"is_red_flags\": \"Yes\",\n\"notes\": \"Harmful words: Stupied, ugly\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        2368,
+        1088
+      ],
+      "id": "6f1d93db-960c-4e57-8e1b-bb2e55eea811",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2176,
+        1072
+      ],
+      "id": "47d73ea9-8544-410a-bd84-b209bec36773",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ptyw8Bm8KfSTqnQj",
+          "name": "OpenAI Lab17"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        2736,
+        560
+      ],
+      "id": "e3b21db6-bdce-45d2-83cb-6f33d544cf8d",
+      "name": "Aggregate content"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ab0a834a-a48a-4d2f-9833-72dc4aa2ef15",
+              "name": "text",
+              "value": "={{ $json.body.messageData.textMessageData.textMessage }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2240,
+        400
+      ],
+      "id": "c8106d2b-10e9-45bb-bea1-e5a9394ce9e9",
+      "name": "Text extract"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ab0a834a-a48a-4d2f-9833-72dc4aa2ef15",
+              "name": "text",
+              "value": "={{ $json.body.messageData.extendedTextMessageData.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2240,
+        576
+      ],
+      "id": "edd947f2-9eaa-46b4-9d87-5892fe46af6f",
+      "name": "Text extract - reply"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        2432,
+        240
+      ],
+      "id": "fab85424-1537-41d7-95f8-b4abe254f2f8",
+      "name": "Transcribe",
+      "credentials": {
+        "openAiApi": {
+          "id": "ptyw8Bm8KfSTqnQj",
+          "name": "OpenAI Lab17"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.body.messageData.fileMessageData.downloadUrl }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2240,
+        240
+      ],
+      "id": "dd4b450d-54c6-4e33-ad1d-a7290da74b5f",
+      "name": "Audio download"
+    },
+    {
+      "parameters": {
+        "jsCode": "// n8n Code node (JavaScript)\n// Goal: take ANY shape (voice or text outputs with varying fields)\n// and aggregate all meaningful text into one string: aggregated_text\n\n// --- Helpers ---\nfunction isString(x) {\n  return typeof x === 'string' && x.trim().length > 0;\n}\n\nfunction secondsToHMS(sec) {\n  const s = Math.max(0, Number(sec) || 0);\n  const h = Math.floor(s / 3600);\n  const m = Math.floor((s % 3600) / 60);\n  const r = Math.floor(s % 60);\n  return [h, m, r].map(v => String(v).padStart(2, '0')).join(':');\n}\n\n// Recursively collect human-meaningful strings from any object/array\nfunction collectStrings(node, path = [], bag = []) {\n  if (node == null) return bag;\n\n  // Prefer well-known text fields first\n  if (typeof node === 'object' && !Array.isArray(node)) {\n    // Common patterns\n    if (isString(node.text)) bag.push(node.text.trim());\n    if (node.extendedTextMessage?.text && isString(node.extendedTextMessage.text)) {\n      bag.push(node.extendedTextMessage.text.trim());\n    }\n    if (isString(node.caption)) bag.push(node.caption.trim());\n    if (isString(node.textMessage)) bag.push(node.textMessage.trim());\n\n    // Data arrays like: { data: [{ text, usage: { seconds }}, ...] }\n    if (Array.isArray(node.data)) {\n      for (const seg of node.data) {\n        if (isString(seg.text)) bag.push(seg.text.trim());\n        // Optional usage metadata\n        const secs = seg?.usage?.seconds;\n        if (typeof secs === 'number') {\n          bag.push(`[duration ${secondsToHMS(secs)}]`);\n        }\n      }\n    }\n\n    // Generic fallback: walk all props\n    for (const [k, v] of Object.entries(node)) {\n      // Avoid double-pushing known keys already handled\n      if (k === 'text' || k === 'caption' || k === 'textMessage' || k === 'extendedTextMessage' || k === 'data') continue;\n      collectStrings(v, path.concat(k), bag);\n    }\n    return bag;\n  }\n\n  if (Array.isArray(node)) {\n    for (let i = 0; i < node.length; i++) {\n      collectStrings(node[i], path.concat(String(i)), bag);\n    }\n    return bag;\n  }\n\n  // Primitive string fallback\n  if (isString(node)) bag.push(node.trim());\n  return bag;\n}\n\n// --- Main ---\nconst raw = [];\n\n// Normalize input: items can be [{json: <obj|array>}...]\nfor (const it of items) {\n  const j = it.json;\n  if (Array.isArray(j)) raw.push(...j);\n  else raw.push(j);\n}\n\n// Extract strings from everything we got\nconst pieces = [];\nfor (const obj of raw) {\n  collectStrings(obj, [], pieces);\n}\n\n// De-dup consecutive identical lines, trim, and join\nconst cleaned = [];\nfor (const p of pieces) {\n  const t = p.replace(/\\s+/g, ' ').trim();\n  if (t && t !== cleaned[cleaned.length - 1]) cleaned.push(t);\n}\n\nreturn [\n  {\n    json: {\n      aggregated_text: cleaned.join('\\n'),\n      segments_found: cleaned.length,\n    },\n  },\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2976,
+        560
+      ],
+      "id": "7632958a-e13a-4ba6-a6f6-72df254f4ce1",
+      "name": "Transform last message"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://7105.api.greenapi.com/waInstance<your_instance_id>/getChatHistory/<your_api_token>",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n\t\"chatId\": \"{{ $('Webhook').item.json.body.senderData.chatId }}\",\n\t\"count\": 10\n}",
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1728,
+        880
+      ],
+      "id": "be99df0d-787d-4a68-9c5c-38e2daead610",
+      "name": "Get last messages",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// n8n Code node (JavaScript)\n\nconst all = [];\n\n// Normalize input: support array items, a single item that's an array, or { messages: [...] }\nfor (const item of items) {\n  const j = item.json;\n  if (Array.isArray(j)) all.push(...j);\n  else if (Array.isArray(j.messages)) all.push(...j.messages);\n  else all.push(j);\n}\n\n// Collect text-only entries (and quoted text messages)\nconst texts = [];\n\nfor (const m of all) {\n  // Plain text messages\n  if (m?.typeMessage === 'textMessage' && typeof m.textMessage === 'string' && m.textMessage.trim()) {\n    texts.push({\n      ts: m.timestamp || 0,\n      senderId: m.senderId || m.participant || 'unknown',\n      senderName: m.senderName || m.senderContactName || 'Unknown',\n      text: m.textMessage.trim(),\n    });\n  }\n\n  // Quoted messages that contain a textMessage payload\n  if (m?.typeMessage === 'quotedMessage' && m?.quotedMessage?.typeMessage === 'textMessage') {\n    const qText = m.quotedMessage.textMessage;\n    if (typeof qText === 'string' && qText.trim()) {\n      texts.push({\n        ts: m.timestamp || 0,\n        senderId: m.quotedMessage.participant || 'unknown',\n        senderName: m.senderName || m.senderContactName || 'Unknown',\n        text: `(quoted) ${qText.trim()}`,\n      });\n    }\n  }\n}\n\n// Sort ascending by time (oldest -> newest)\ntexts.sort((a, b) => (a.ts || 0) - (b.ts || 0));\n\n// Build a single string for AI context\nconst lines = texts.map(t => {\n  const iso = t.ts ? new Date(t.ts * 1000).toISOString() : '';\n  return `${iso} | ${t.senderName} (${t.senderId}): ${t.text}`;\n});\n\nconst context = lines.join('\\n');\n\nreturn [\n  {\n    json: {\n      context_text: context,          // <- feed this to your AI node\n      messages_count: texts.length,   // handy for debugging/guards\n    },\n  },\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1952,
+        880
+      ],
+      "id": "90d831ac-7398-4ee8-a034-cf5a10d76846",
+      "name": "Combine messages",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=The last message:\n{{$items(\"Transform last message\")[0].json.aggregated_text}}\n\nThe last few messages for context:\n{{ $json.context_text }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=You are a safety analyst whose sole job is to review WhatsApp conversations between children and detect any signs of:\n- abuse\n- bullying\n- harassment\n- emotional distress\n- threats\n- dangerous or highly inappropriate content\n\nYou will receive:\n- The last (most recent) message\n- Up to 10 previous messages for context\n\nYour task:\n1. Analyze the entire short conversation, not just the last message.\n2. Decide if there are ANY red flags that may justify a parent intervention.\n3. Be sensitive to repeated patterns, power imbalance, and emotional tone.\n4. Take into account that children often joke, but also use strong words casually. Try to distinguish between:\n   - Mild teasing between friends\n   - Versus real bullying, exclusion, threats, or distress.\n\n--------------------------------\nCONTENT TYPES TO FLAG (RED FLAGS)\n--------------------------------\n\nYou should mark **red flags** (is_red_flags = \"Yes\") when you notice one or more of the following:\n\n1. **Bullying and insults**\n   - Repeated name-calling, humiliation, or shaming.\n   - Examples in English: \"stupid\", \"loser\", \"ugly\", \"fat\", \"no one likes you\".\n   - Examples in Hebrew:\n     - \"מכוערת\", \"דפוק\", \"אף אחד לא אוהב אותך\", \"אף אחד לא רוצה לדבר איתך\"\n     - \"כולם שונאים אותך\", \"אף אחד לא רוצה שתבוא\"\n     - \"את אפס\", \"את/ה אפס מאופס\"\n\n2. **Social exclusion and group shaming**\n   - Messages about leaving someone out on purpose, mocking them in a group, or organizing others against them.\n   - Examples:\n     - \"We are all going to the party without you\"\n     - \"No one talk to her, she is disgusting\"\n   - Hebrew:\n     - \"אל תצרפו אותה לקבוצה\"\n     - \"אל תזמינו אותו למסיבה\"\n     - \"בואו כולנו נחסום אותה\"\n     - \"אל תענו לו בכלל\"\n\n3. **Threats or encouragement of violence**\n   - Direct or indirect threats to hurt someone.\n   - Examples:\n     - \"I will hit you\", \"I will hurt you\", \"you will regret this\"\n   - Hebrew:\n     - \"אני אשבור לך את העצמות\"\n     - \"אני אחכה לך מחוץ לבית ספר\"\n     - \"אני אדפוק אותך\", \"אני אעשה לך משהו רע\"\n\n4. **Self-harm, extreme sadness, or suicidal hints**\n   - Any sign the child wants to hurt themselves or feels worthless or hopeless.\n   - Examples:\n     - \"I hate myself\", \"I want to disappear\", \"no reason to live\"\n   - Hebrew:\n     - \"אין לי כוח לחיים\"\n     - \"הלוואי שלא הייתי פה\"\n     - \"אף אחד לא אוהב אותי\"\n     - \"אני שונא את עצמי\"\n   - If you see anything that *might* hint at self-harm or extreme emotional distress, you should treat it as a red flag.\n\n5. **Sexual content or grooming-like behavior**\n   - Sexual comments, sending or asking for inappropriate pictures, or trying to move the conversation into sexual topics.\n   - Especially if there is pressure, manipulation, or clear discomfort.\n   - In Hebrew, watch for things like:\n     - בקשות לתמונות גוף או \"תשלחי תמונה בלי...\"\n     - \"אל תספרי/י לאף אחד מה שדיברנו\"\n     - \"זה הסוד שלנו\"\n\n6. **Hate speech or severe humiliation about identity**\n   - Insults based on religion, race, gender, appearance, disability, or similar.\n   - Even if used as \"jokes\", this can still be harmful.\n   - In Hebrew, pay attention to slurs or repeated mocking of how someone looks, talks, or where they are from.\n\n7. **Pressuring, manipulation, or unhealthy control**\n   - \"If you don't do X, I won't be your friend\"\n   - \"You must answer me all the time\"\n   - Hebrew examples:\n     - \"אם את לא עושה מה שאני אומר, אני לא חבר שלך יותר\"\n     - \"אל תדברי איתה, רק איתי\"\n     - \"את חייבת לענות לי עכשיו\"\n\n--------------------------------\nHEBREW, SLANG, AND EMOJIS\n--------------------------------\n\nMost communication will be in Hebrew, sometimes mixed with English, transliteration, typos, and slang.\n\nYou must:\n- Understand Hebrew in regular spelling and with mistakes.\n- Understand mixed messages like: \"את מכוערת חחח lol\" or \"די את דפוקה חח\".\n- Recognize that some words can be non-literal but still harmful in context.\n\nPay special attention to **emojis combined with text**:\n- Emojis often used in bullying or shaming:\n  - 🤮 🤢 💩 😆 😹 🙄 😒 💀 ☠️\n- Emojis often used with threats or violence:\n  - 🔪 🔫 💣 👊 😡 🤬\n- Emojis often used with sadness or distress:\n  - 😢 😭 💔 😞 😔 🥺\n\nExamples of problematic combinations:\n- \"את מגעילה 🤮\"\n- \"אף אחד לא אוהב אותך 💀\"\n- \"אני שונאת את עצמי 😭\"\n- \"חכה מחר 🔪\"\n\nThe meaning is always context + emojis together. For example:\n- \"אני מתה עלייך 💀\" between friends may be a joke and **not** a red flag.\n- \"את מעצבנת אותי, בא לי להרביץ לך 💀\" can be more worrying, especially if repeated or serious.\n\n--------------------------------\nWHAT NOT TO FLAG (USUALLY)\n--------------------------------\n\nTry **not** to mark red flags in these situations, unless they are extreme or repeated:\n\n- Light teasing between clear friends:\n  - \"יא דפוקה חחח\" once, with laughing and positive context.\n  - \"את מפגרת חחח אני מתה עלייך\"\n- Gaming or meme talk that uses exaggerated language without real intent:\n  - \"אני הורג אותך במשחק הזה חח\"\n- Isolated frustration like:\n  - \"אוף כמה אני שונא מבחנים\", \"אני מת מרעב\"\n\nIf you are unsure, focus on:\n- Tone (mean or playful?)\n- Repetition (once vs many times)\n- Power imbalance (many against one, or one targeted child)\n- Emotional reaction (does someone sound hurt, sad, or scared?)\n\n--------------------------------\nOUTPUT FORMAT\n--------------------------------\n\nYour response MUST be **only** a valid JSON object, with no extra text, comments, or explanation.\n\nUse exactly this schema:\n\n- `is_red_flags`: \"Yes\" or \"No\"\n  - \"Yes\" if you see any concerning signs that might justify parental attention.\n  - \"No\" if there are no meaningful red flags.\n\n- `notes`: \n  - If `is_red_flags` is \"Yes\" – briefly explain **why**.\n    - Mention key words, patterns, and risks.\n    - You can include short quotes from the messages.\n  - If `is_red_flags` is \"No\" – return the string \"None\".\n\nExample for a problematic conversation:\n{\n  \"is_red_flags\": \"Yes\",\n  \"notes\": \"Bullying and exclusion in Hebrew. Repeated insults such as 'אף אחד לא אוהב אותך' and 'את אפס', combined with 💀 and 🤮 emojis. The child is being isolated by the group.\"\n}\n\nExample for a safe conversation:\n{\n  \"is_red_flags\": \"No\",\n  \"notes\": \"None\"\n}\n\nDo not add any other fields. Do not write any text outside the JSON.\n"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        2176,
+        880
+      ],
+      "id": "98dc1914-85e1-4fd4-b15e-47935918b200",
+      "name": "Analyze messages"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "41e62b69-8168-4d21-ab97-b48e1f336248",
+              "leftValue": "={{ $json.output.is_red_flags }}",
+              "rightValue": "Yes",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2528,
+        880
+      ],
+      "id": "288abfda-c7f6-46ca-9919-9d9ef2827002",
+      "name": "Decide_if_flag"
+    },
+    {
+      "parameters": {
+        "sendTo": "youremail@email.com",
+        "subject": "Monitoring Flag",
+        "message": "=<!DOCTYPE html>\n<html lang=\"he\" dir=\"rtl\">\n<head>\n  <meta charset=\"UTF-8\" />\n  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1\" />\n  <title>התראת מעקב וואטסאפ</title>\n  <style>\n    body { margin:0; padding:0; background:#0b0d10; direction:rtl; text-align:right; }\n    table, td, h1, h2, h3, p, div, pre, ol, li { direction:rtl; text-align:right; }\n  </style>\n</head>\n<body style=\"margin:0; padding:0; background:#0b0d10; direction:rtl; text-align:right;\">\n  <!-- Preheader (נסתר) -->\n  <div style=\"display:none;max-height:0;overflow:hidden;opacity:0;\">\n    התראה: זוהה דגל אדום בהודעות האחרונות. פתח לפרטים.\n  </div>\n\n  <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"background:#0b0d10; direction:rtl; text-align:right;\">\n    <tr>\n      <td align=\"center\" style=\"padding:24px;\">\n        <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width:660px; background:#0b0d10; direction:rtl; text-align:right;\">\n          <!-- Header / Top Bar -->\n          <tr>\n            <td style=\"padding:0; border-radius:16px; background:linear-gradient(90deg,#5c6cff,#19e68c); height:6px; line-height:6px; font-size:0;\">&nbsp;</td>\n          </tr>\n\n          <!-- Card -->\n          <tr>\n            <td style=\"background:#0f1217; border:1px solid #1c2230; border-radius:16px; padding:28px; color:#e7ecf3; font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,'Noto Sans',sans-serif; direction:rtl; text-align:right;\">\n              \n              <!-- Title -->\n              <h1 style=\"margin:0 0 12px 0; font-size:22px; line-height:1.3; color:#ffffff; text-align:right;\">\n                התראה: זוהה דגל אדום בשיחות וואטסאפ\n              </h1>\n              <p style=\"margin:0 0 20px 0; color:#aeb6c2; font-size:14px; text-align:right;\">\n                המערכת ניתחה את ההודעות האחרונות והעלתה חשש שדורש תשומת לב.\n              </p>\n\n              <!-- Issues / Notes -->\n              <div style=\"margin:0 0 20px 0; padding:16px; border:1px solid #2a3242; border-radius:12px; background:#121722; text-align:right;\">\n                <div style=\"font-size:13px; color:#8fb0ff; font-weight:600; margin-bottom:8px; text-align:right;\">\n                  סיבת הדגל / נקודות לדאגה\n                </div>\n                <pre style=\"margin:0; white-space:pre-wrap; word-wrap:break-word; font-size:14px; line-height:1.6; color:#e7ecf3; font-family:ui-monospace,Menlo,Consolas,monospace; text-align:right;\">\n{{ $('Analyze messages').item.json.output.notes }}</pre>\n              </div>\n\n              <!-- Meta: Sender / Group -->\n              <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"margin:0 0 16px 0; direction:rtl; text-align:right;\">\n                <tr>\n                  <td style=\"padding:12px; border:1px solid #2a3242; border-radius:12px; background:#0f141d; text-align:right;\">\n                    <div style=\"font-size:12px; color:#9aa7b4; margin-bottom:4px;\">שולח</div>\n                    <div style=\"font-size:15px; color:#e7ecf3; font-weight:600;\">\n                     {{ $('Webhook').item.json.body.senderData.senderName }}\n                    </div>\n                  </td>\n                  <td style=\"width:16px;\"></td>\n                  <td style=\"padding:12px; border:1px solid #2a3242; border-radius:12px; background:#0f141d; text-align:right;\">\n                    <div style=\"font-size:12px; color:#9aa7b4; margin-bottom:4px;\">קבוצה</div>\n                    <div style=\"font-size:15px; color:#e7ecf3; font-weight:600;\">\n                     {{ $('Webhook').item.json.body.senderData.chatName }}\n                    </div>\n                  </td>\n                </tr>\n              </table>\n\n              <!-- Last message -->\n              <div style=\"margin:0 0 6px 0; font-size:13px; color:#8fb0ff; font-weight:600; text-align:right;\">\n                ההודעה האחרונה\n              </div>\n              <div style=\"margin:0 0 20px 0; padding:14px; border-right:4px solid #5c6cff; background:#101521; border-radius:8px; text-align:right;\">\n                <div style=\"font-size:14px; line-height:1.7; color:#e7ecf3; word-break:break-word; text-align:right;\">\n                  {{$items(\"Transform last message\")[0].json.aggregated_text}}\n                </div>\n              </div>\n\n              <!-- Context window -->\n              <div style=\"margin:0 0 6px 0; font-size:13px; color:#8fb0ff; font-weight:600; text-align:right;\">\n                מספר הודעות אחרונות להקשר\n              </div>\n              <div style=\"margin:0 0 24px 0; padding:14px; border:1px dashed #2a3242; background:#0f141d; border-radius:8px; text-align:right;\">\n                <pre style=\"margin:0; white-space:pre-wrap; word-wrap:break-word; font-size:14px; line-height:1.6; color:#cbd5e1; font-family:ui-monospace,Menlo,Consolas,monospace; text-align:right;\">\n{{ $('Combine messages').item.json.context_text }}</pre>\n              </div>\n\n              <!-- Callouts -->\n              <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"margin:0 0 12px 0; direction:rtl; text-align:right;\">\n                <tr>\n                  <td style=\"padding:12px; background:#111a25; border:1px solid #223046; border-radius:12px; text-align:right;\">\n                    <div style=\"font-size:13px; color:#9aa7b4; margin:0 0 6px 0;\">\n                      הצעות לפעולה\n                    </div>\n                    <ol style=\"margin:0; padding:0 18px; color:#e7ecf3; font-size:14px; line-height:1.7; direction:rtl; text-align:right;\">\n                      <li>בדיקה מהירה מול הבת בשיח רגוע ומכיל.</li>\n                      <li>סקירת היסטוריית ההודעות בקבוצה/צ׳אט הרלוונטיים.</li>\n                      <li>סימון האירוע במערכת (אם רלוונטי) למעקב עתידי.</li>\n                    </ol>\n                  </td>\n                </tr>\n              </table>\n\n              <!-- Footer -->\n              <p style=\"margin:20px 0 0 0; font-size:12px; color:#6b7685; text-align:right;\">\n                הודעה זו נוצרה אוטומטית ע״י תהליך n8n לאחר זיהוי דגל אדום בהודעות האחרונות.\n              </p>\n            </td>\n          </tr>\n\n          <!-- Shadow spacer -->\n          <tr>\n            <td style=\"height:20px;\"></td>\n          </tr>\n\n        </table>\n      </td>\n    </tr>\n  </table>\n</body>\n</html>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2992,
+        864
+      ],
+      "id": "168d1069-94ca-45e8-8bd6-c5418d85ea6c",
+      "name": "Notify",
+      "webhookId": "bb92a578-48ce-4542-b0c4-738399cf3e85"
+    },
+    {
+      "parameters": {
+        "content": "# 🚦 Guardian – מדריך הגדרה מהירה (n8n)\n[סדנת האייג׳נטים שלי ושל אמיתי בונה](https://agentim.co.il)  \n[האתר של Lab17](https://lab17.ai)\n\n**מה זה?**  \nGuardian היא מערכת ניטור עדינה לוואטסאפ: לא קוראת הודעות באופן שוטף, רק מנתחת את ההודעה האחרונה + הקשר קצר. אם מזוהה משהו חריג → נשלחת התראה במייל.  \nהכל בשקיפות מלאה מול הילד/ה.\n\n\n## דרישות מוקדמות\n- חשבון פעיל ב‑**n8n**  \n- חשבון ב‑**GreenAPI** (חיבור וואטסאפ; לעבודה עם קבוצות/כל ההודעות נדרש מסלול בתשלום ~$12/חודש)  \n- חשבון **OpenAI** + API key  \n- חשבון **Gmail** להתראות\n\n> ⚠️ **אזהרה**: שימוש ב‑GreenAPI אינו בהתאם לתנאי השימוש של WhatsApp. השימוש כאן אישי/למטרות ניטור עדין במשפחה ועל אחריותך בלבד.\n\n---\n\n## שלב 1: n8n – ייבוא והפעלה\n1. ב‑n8n בחרו **Import from File** וייבאו את קובץ ה‑JSON.  \n2. פתחו את ה‑Workflow ובדקו שהנודים נטענו תקין.  \n3. העתיקו את כתובת ה‑Webhook של נוד **Webhook**  \n   - השתמשו ב‑**Production URL** (לא ה‑Test).\n\n---\n\n## שלב 2: GreenAPI – חיבור וואטסאפ ו‑Webhook\n1. היכנסו ל‑[https://green-api.com/en](https://green-api.com/en) וצרו **Instance** חדש.  \n2. חברו את מכשיר הוואטסאפ (סריקת QR לפי ההוראות במסך).  \n3. שמרו את:\n   - **idInstance**  \n   - **apiTokenInstance**\n4. הגדירו **Webhook**:\n   - בלוח הבקרה: **Change → Webhooks**  \n   - הפעילו את שתי האופציות הראשונות.  \n   - הדביקו את **Production URL** של ה‑Webhook מה‑n8n בשדה `Webhook URL` → **Save changes**.\n5. עדכון נוד **Get last messages** ב‑n8n:  \n   פתחו את הנוד ועדכנו את ה‑URL כך שישתמש ב‑instance שלכם (ולא בדוגמה מהקובץ).\n   לדוגמה:\nPOST https://api.green-api.com/waInstance<YOUR_INSTANCE_ID>/getChatHistory/<YOUR_API_TOKEN>\nBody (JSON):\n{\n“chatId”: “{{ $(‘Webhook’).item.json.body.senderData.chatId }}”,\n“count”: 10\n}\n\nהחליפו:\n- `<YOUR_INSTANCE_ID>` → ה‑idInstance שלכם  \n- `<YOUR_API_TOKEN>` → ה‑apiTokenInstance שלכם\n\n> 💡 טיפ: בחלק מהאזורים ה‑URL נראה כ‑`https://<region>.api.greenapi.com/...` – שמרו על אותה תצורה כמו בלוח הבקרה שלכם.",
+        "height": 1248,
+        "width": 784,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        800,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "2a1f6da6-46ed-43ae-9579-f7f97a3c88f9",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## שלב 3: OpenAI – מפתח API\n1. צרו מפתח ב‑OpenAI.  \n2. ב‑n8n: **Credentials → OpenAI** → הדביקו את ה‑API key.  \n3. חברו את האישורים לנודים:\n- **OpenAI Chat Model**  \n- **Transcribe** (לניתוח הודעות קוליות אם קיימות)\n\n---\n\n## שלב 4: Gmail – שליחת מיילים\n1. **Credentials → Gmail (OAuth2)** והתחברו לחשבון שלכם.  \n2. פתחו את נוד **Notify**:\n- `sendTo` → כתובת המייל שלכם  \n- `subject` → כותרת ההתראה (אופציונלי לשנות)\n\n---\n\n## שלב 5: בדיקות\n1. **Save** ואז **Activate** ל‑Workflow.  \n2. שלחו הודעת מבחן לחשבון הוואטסאפ המחובר.  \n3. בדקו שהנודים רצים ושבמקרה של תוכן בעייתי מתקבל מייל.  \n4. אם אין התראות → נסו להכניס מילים קשות/פוגעניות לבדיקה.\n\n---\n\n## התאמות נפוצות\n- **כמות הקונטקסט**: בנוד **Get last messages** שנו `count` (ברירת מחדל: 10).  \n- **קריטריונים להתראה**: ערכו את ה‑Prompt בנוד **Analyze messages** (לדוגמה, הרחבת רשימת סיכונים/תופעות).  \n- **ניסוח המייל**: נוד **Notify** כולל תבנית HTML (RTL). אפשר לשנות כותרות/טקסטים.  \n- **שפות מודל**: אפשר לציין ל‑LLM שהשפה היא עברית כדי לשפר דיוק.\n\n---\n\n## תקלות נפוצות\n- **לא מגיעות התראות**:  \n- ודאו ש‑Webhook של GreenAPI מצביע ל‑Production URL הנכון.  \n- בדקו בלוגים של ה‑Workflow שאין שגיאות הרשאות (OpenAI/Gmail).  \n- **שגיאת GreenAPI**:  \n- ודאו שה‑instance מחובר (QR תקף), ושמסלול המנוי מאפשר גישה לקבוצות.  \n- **מייל לא נשלח**:  \n- בדקו את ה‑Gmail Credentials ושהשדה `sendTo` תקין.  \n- **עברית לא מיושרת**:  \n- ודאו שה‑HTML בתבנית כולל `dir=\"rtl\"` ו‑`align=\"right\"` (כבר קיים כאן).\n\n---\n\n## הערות חשובות\n- המערכת בנויה במכוון להיות **מינימלית ולא פולשנית**:  \n- ניתוח ההודעה האחרונה + הקשר קצר להורדת false positives.  \n- אין שמירה גורפת של היסטוריית הודעות. ",
+        "height": 1248,
+        "width": 784,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "065fd513-4725-4db7-b8ee-e3cea26699e4",
+      "name": "Sticky Note1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Audio download",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Text extract",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Text extract - reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Analyze messages",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Analyze messages",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate content": {
+      "main": [
+        [
+          {
+            "node": "Transform last message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text extract": {
+      "main": [
+        [
+          {
+            "node": "Aggregate content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text extract - reply": {
+      "main": [
+        [
+          {
+            "node": "Aggregate content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe": {
+      "main": [
+        [
+          {
+            "node": "Aggregate content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Audio download": {
+      "main": [
+        [
+          {
+            "node": "Transcribe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transform last message": {
+      "main": [
+        [
+          {
+            "node": "Get last messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get last messages": {
+      "main": [
+        [
+          {
+            "node": "Combine messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine messages": {
+      "main": [
+        [
+          {
+            "node": "Analyze messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze messages": {
+      "main": [
+        [
+          {
+            "node": "Decide_if_flag",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decide_if_flag": {
+      "main": [
+        [
+          {
+            "node": "Notify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f426618d-f2af-4614-be45-b8417b24e0a6",
+  "meta": {
+    "instanceId": "da3b977dba2baf342ff54f2a19901e9b8b6f67e2ffb5e56c9485823b1ebc4782"
+  },
+  "id": "UqodNp1vDMQN9LMk",
+  "tags": []
+}

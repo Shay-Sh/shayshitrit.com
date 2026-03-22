@@ -1,0 +1,833 @@
+{
+  "name": "Linkedin RAG Agent - Shay",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "8d48d469-a3a2-4e05-b723-b1dcb1369fab",
+      "name": "OpenAI Chat Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        560
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "9afFHVGDQ8srWY7U",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-small",
+        "options": {}
+      },
+      "id": "957a9509-b9d5-47bd-a534-fa3086d5d8ed",
+      "name": "Embeddings OpenAI1",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        1040
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "9afFHVGDQ8srWY7U",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "linkedin_posts",
+        "description": "These are all of Shay's LinkedIn posts , engagement and statistics. \n",
+        "topK": 30
+      },
+      "id": "beb752d0-a116-4eb2-b4b0-dfa9ad189807",
+      "name": "Retrieve Documents",
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Set file id').item.json.file_id }}",
+          "mode": "id"
+        },
+        "options": {
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "text/plain",
+              "slidesToFormat": "application/pdf"
+            }
+          }
+        }
+      },
+      "id": "0200dd4e-0f90-445e-99fa-a518024c645a",
+      "name": "Download File",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        820,
+        900
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-small",
+        "options": {}
+      },
+      "id": "c572b775-24e8-4046-92e5-c0b9bbbe33be",
+      "name": "Embeddings OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        680
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "9afFHVGDQ8srWY7U",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "ff934583-0995-4061-87c5-0fe888b70c54",
+      "name": "Postgres Chat Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        400
+      ],
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {
+          "queryName": "match_documents"
+        }
+      },
+      "id": "26236143-9e4b-4e92-b38d-b6e28db6d108",
+      "name": "Supabase Vector Store",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "439c91d6-f8c9-47e6-8ad2-e02710435b66",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1220,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {
+          "queryName": "match_documents"
+        }
+      },
+      "id": "8da74f43-91ec-42a2-b11d-83da79058e50",
+      "name": "Insert into Supabase Vectorstore",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        820
+      ]
+    },
+    {
+      "parameters": {
+        "model": "=claude-3-7-sonnet-20250219",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.2,
+      "position": [
+        880,
+        420
+      ],
+      "id": "5452ef91-6fb2-4fda-bf22-cc8711acfeb3",
+      "name": "Anthropic Chat Model"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "# עוזר לינקדאין אישי לשי שטרית\n\n## זהות ומטרה\nאתה העוזר האישי של שי שטרית המיועד לניהול ויצירת תוכן בלינקדאין. תפקידך לעזור בניתוח פוסטים קיימים, ליצור פוסטים חדשים, ולספק תובנות מבוססות נתונים על הביצועים שלהם.\n\nתניח שאתה תמיד מדבר עם שי, ולא עם אף אחד אחר. \n## על שי שטרית\n\n## תפקידים עיקריים\n1. **ניתוח פוסטים קיימים**: ניתוח הפוסטים הקיימים של שי בלינקדאין ומתן תובנות על הביצועים שלהם\n2. **יצירת תוכן חדש**: כתיבת פוסטים חדשים שמתאימים לקול ולתחומי העניין של שי\n3. **ניתוח מגמות ודפוסים**: זיהוי נושאים, זמני פרסום והיבטים אחרים שמשפיעים על מעורבות\n4. **המלצת אסטרטגיה**: הצעת רעיונות לשיפור הפעילות בלינקדאין בהתבסס על ניתוח הביצועים\n\n## הנחיות לעיבוד מידע ומענה על שאלות\n\n### לניתוח ביצועים\nבניתוח ביצועי פוסטים:\n1. חפש מידע על חשיפות, תגובות, לייקים ושיתופים בכל פוסט\n2. השווה ביצועים בין פוסטים שונים לזיהוי מגמות\n3. נתח את השפעת התוכן, זמן הפרסום, ושימוש בהאשטאגים על המעורבות\n4. התייחס לנתונים דמוגרפיים של הקהל כשזמינים\n5. הצע תובנות ספציפיות ופרקטיות להמשך\n\n## דוגמאות לתרחישים\n\n## הנחיות סופיות\n1. תמיד התייחס למסמכים כפוסטים של לינקדאין של שי\n2. כשאתה נשאל שאלה כמותית או אנליטית, הצג את המתודולוגיה והנתונים שאתה מסתמך עליהם\n3. כשאתה יוצר תוכן חדש, הקפד שיתאים לקול ולסגנון של שי בפוסטים הקודמים\n4. בכל תשובה, ספק תובנות ברורות ופרקטיות שמבוססות על נתונים מדויקים\n5. זכור שאתה עוזר ללינקדאין בלבד - כל שאלה שתישאל היא בהקשר של לינקדאין אלא אם צוין אחרת"
+        }
+      },
+      "id": "b15bbe3e-b4b6-4577-babc-5b23afe4a649",
+      "name": "Agent Shay Linkedin",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        900,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "היי שי,\nאני העוזר האישי שלך ללינקדאין.\nאני יכול לעזור לך בניתוח הפוסטים הקיימים שלך, ליצור פוסטים חדשים, לספק תובנות על הביצועים ולהמליץ על אסטרטגיות לשיפור הנוכחות שלך בלינקדאין.\n\nאיך אני יכול לעזור לך היום? ",
+        "options": {}
+      },
+      "id": "b6f844ad-3af9-4de9-9a35-5d60cc3b299a",
+      "name": "Chat trigger flow",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        60,
+        180
+      ],
+      "webhookId": "ca678f7f-2a8d-400a-b7f1-000c51152dc7"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "82983622-e530-4aa3-bec1-50c5a62089f1",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "8f673217-68e0-4685-b143-afea400107ca",
+      "name": "Webhook trigger flow",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        60,
+        380
+      ],
+      "webhookId": "82983622-e530-4aa3-bec1-50c5a62089f1"
+    },
+    {
+      "parameters": {
+        "content": "## Google Drive --> Vector database (Supabase) flow",
+        "height": 80,
+        "width": 1711,
+        "color": 6
+      },
+      "id": "bc7e7ce3-15a5-47e2-ab58-15540da6186a",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        1340
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## RAG AI Agent",
+        "height": 80,
+        "width": 1743,
+        "color": 4
+      },
+      "id": "74e24418-d2b8-44c6-b140-64684cb31e8e",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9a9a245e-f1a1-4282-bb02-a81ffe629f0f",
+              "name": "chatInput",
+              "value": "={{ $json?.chatInput }}",
+              "type": "string"
+            },
+            {
+              "id": "b80831d8-c653-4203-8706-adedfdb98f77",
+              "name": "sessionId",
+              "value": "={{ $json?.sessionId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "da2332b7-fffb-4056-aeb5-ca536bc38c71",
+      "name": "Set fields - chat",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        440,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9a9a245e-f1a1-4282-bb02-a81ffe629f0f",
+              "name": "chatInput",
+              "value": "={{ $('Webhook trigger flow').item.json.body[1].chatinput }}",
+              "type": "string"
+            },
+            {
+              "id": "b80831d8-c653-4203-8706-adedfdb98f77",
+              "name": "sessionId",
+              "value": "={{ $('Webhook trigger flow').item.json.body[1].sessionid }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8261e00c-e070-4a9d-bf7c-00b0eadfd143",
+      "name": "Set fields - webhook",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        640,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "ededa96d-ec45-4513-b687-3fbe311389d9",
+      "name": "Webhook error response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "10646eae-ae46-4327-a4dc-9987c2d76173",
+              "name": "file_id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "808f9f05-d908-44f3-bd84-b3bef7204b6c",
+      "name": "Set file id",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        900
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://thisisyoursupabaseurl.supabase.co/auth/v1/user",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $json.headers[\"x-supabase-apikey\"] }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.headers[\"x-supabase-token\"] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "40ee059a-d00f-41e8-ad8a-db88f4a16d0d",
+      "name": "Supabase Auth Verify",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        280,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "content": "# הלינקדאין סיידקיק של שי\nפרופיל הלינקדאין שלי  [לינק](https://www.linkedin.com/in/shayshitrit/)\nהפוסט על האייג׳נט [לינק](https://www.linkedin.com/feed/update/urn:li:activity:7304764710124453889/) \n\nהאייג׳נט הבא נבנה כדי לעזור לעסקים ואנשים פרטיים להבין יותר את הקהל שלהם, איזה תוכן עובד יותר ואיזה פחות, ולהפוך את תהליך הכתיבה למהיר ואפקטיבי יותר\n\nn8n היא לא פלטפורמה פשוטה ודורשת ידע טכני והבנה של צורת בניית הפלואוים ועבודה עם אייג׳נטים ו API\n\n## הוראות\nיש דברים שתצטרכו להוסיף בצורה ידנית:\nאת כל נתוני החשבונות שלכם:\nסופהבייס, open ai, anthropic , google drive\n\nבאייג׳נט (המלבן עם האייקון של הרובוט באמצע) יש כבר פרומפט התחלתי שאני משתמש בו באייג׳נט שלי (הורדתי דברים אישיים ופחות רלוונטיים)\nהפרומפט אמור להגיד לאייג׳נט מה התפקיד שלו ואיך להתנהג בגדול. תתאימו את הפרומפט לצרכים שלכם.\n\nסופהבייס:\nכנראה החלק המורכב ביותר כאן. יש לפתוח חשבון ופרויקט, להוסיף את נתוני הכניסה, ליצור טבלאות מותאמות כדי שהאייג׳נט יצליח לשאוב משם מידע ולהכניס לשם מידע חדש.\nזה הרכיב שלקח הכי הרבה זמן לפתור.\n\nגוגל דרייב:\nהחלק התחתון בפלואו מטפל בנושא של סינכרון הקבצים מגוגל דרייב. תחברו את החשבון שלכם, תבחרו תיקייה מתאימה וזהו - כל קובץ חדש שיצטרף לתיקייה יסונכרן אוטומטית עם הדאטהבייס שממנו האייג׳נט שואב את המידע.  \n\nעוד פרטים על ה RAG:\n- הצ׳ופציק הקטן שנמצא הכי למטה בצד ימין\nThe chunker\nקובע מה יהיה הגודל של כל רשומה בדאטהבייס - כרגע הגודל שלו די גדול כדי שיכיל פוסטים שלמים. ניתן לשנות את זה כרצונכם. ההמלצה שלי היא להתחיל עם גודל שמכיל פוסט שלם, זה מבטיח את איכות התשובות, אבל יהיה על חשבון זמן ריצה, ויעבוד פחות טוב כשיהיה המון מידע\n\n## ממשק\nהטריגר התחתון שנקרא\nWebhook trigger flow\nהוא בעצם חיבור לממשק שבניתי - הממשק הוא אישי ולכן תצטרכו לבנות אחד כזה עבורכם אם תרצו.\nאבל אתם יכולים להשתמש תמיד בצ׳אט המובנה ב n8n.\nכל הפלואו של האייג׳נט בנוי גם לשימוש בצ׳אט הזה. ",
+        "height": 1420,
+        "width": 500,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -500,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "9ac7cf13-446f-4093-9742-547d5909000b",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "chunkSize": 5000,
+        "options": {}
+      },
+      "id": "bdc505cc-b522-4f05-baf9-3b29f7f643d4",
+      "name": "The chunker",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        1200
+      ]
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.data }}",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "=file_id",
+                "value": "={{ $('Set file id').item.json.file_id }}"
+              }
+            ]
+          }
+        }
+      },
+      "id": "8b44fee0-07c9-4587-bb09-0715d86446ce",
+      "name": "Data Loader",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        1040
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "id": "b32215f4-16be-4905-8ffe-41811e370dac",
+      "name": "Text Extractor",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        980,
+        1040
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "tableId": "documents",
+        "filterType": "string",
+        "filterString": "=metadata->>file_id=like.*{{ $json.file_id }}*"
+      },
+      "id": "e9bf0ef8-d32e-47f0-8a43-1c2a38f75de4",
+      "name": "Delete The Old Doc",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        660,
+        1040
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1ZvPDKT1CvyrEtwpddp5hz95m1OkiEeUq",
+          "mode": "list",
+          "cachedResultName": "Linkedin Posts",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1ZvPDKT1CvyrEtwpddp5hz95m1OkiEeUq"
+        },
+        "event": "fileUpdated",
+        "options": {}
+      },
+      "id": "9bcc4732-ae22-4128-bead-922b17aa8849",
+      "name": "File Updated Trigger",
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        60,
+        1020
+      ]
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1ZvPDKT1CvyrEtwpddp5hz95m1OkiEeUq",
+          "mode": "list",
+          "cachedResultName": "Linkedin Posts",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1ZvPDKT1CvyrEtwpddp5hz95m1OkiEeUq"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "id": "7e165c61-618b-4a10-aaf3-9e161327d6b7",
+      "name": "File Created Trigger",
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        60,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "2d5f1cb2-511d-48a3-952a-c7c5be7b3e61",
+              "leftValue": "={{ $json.email }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "7bed6673-c85b-4564-bddc-4c41b194d827",
+      "name": "If: Handles Missing User",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        460,
+        380
+      ]
+    }
+  ],
+  "pinData": {
+    "Webhook trigger flow": []
+  },
+  "connections": {
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Retrieve Documents",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve Documents": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent Shay Linkedin",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download File": {
+      "main": [
+        [
+          {
+            "node": "Text Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Insert into Supabase Vectorstore",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Agent Shay Linkedin",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Retrieve Documents",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agent Shay Linkedin",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agent Shay Linkedin": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat trigger flow": {
+      "main": [
+        [
+          {
+            "node": "Set fields - chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook trigger flow": {
+      "main": [
+        [
+          {
+            "node": "Supabase Auth Verify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set fields - chat": {
+      "main": [
+        [
+          {
+            "node": "Agent Shay Linkedin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set fields - webhook": {
+      "main": [
+        [
+          {
+            "node": "Agent Shay Linkedin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set file id": {
+      "main": [
+        [
+          {
+            "node": "Delete The Old Doc",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Auth Verify": {
+      "main": [
+        [
+          {
+            "node": "If: Handles Missing User",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "The chunker": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Insert into Supabase Vectorstore",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Extractor": {
+      "main": [
+        [
+          {
+            "node": "Insert into Supabase Vectorstore",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete The Old Doc": {
+      "main": [
+        [
+          {
+            "node": "Download File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "File Updated Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set file id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "File Created Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set file id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If: Handles Missing User": {
+      "main": [
+        [
+          {
+            "node": "Set fields - webhook",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Webhook error response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e7d4443e-7f1a-427d-913e-9ef4d027c45d",
+  "meta": {
+    "instanceId": "5efb0288440af303acbaf7676d1525bb6d8e3aa84abc0b792c1c36920bc0da6d"
+  },
+  "id": "yxUmsMIAiA6bthTW",
+  "tags": []
+}
