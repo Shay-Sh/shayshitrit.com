@@ -26,14 +26,14 @@ export default function Home() {
             {["The world doesn't need", "more AI strategy."].map((line, i) => (
               <span
                 key={i}
-                className="block text-[clamp(36px,7vw,72px)] font-black leading-[1.08] tracking-[-0.03em] opacity-0 animate-[slideUp_0.65s_cubic-bezier(0.16,1,0.3,1)_forwards]"
+                className="block text-[clamp(30px,7vw,72px)] font-black leading-[1.08] tracking-[-0.03em] opacity-0 animate-[slideUp_0.65s_cubic-bezier(0.16,1,0.3,1)_forwards]"
                 style={{ animationDelay: `${0.15 + i * 0.2}s` }}
               >
                 {line}
               </span>
             ))}
             <span
-              className="block text-[clamp(36px,7vw,72px)] font-black leading-[1.08] tracking-[-0.03em] opacity-0 animate-[slideUp_0.65s_cubic-bezier(0.16,1,0.3,1)_forwards]"
+              className="block text-[clamp(30px,7vw,72px)] font-black leading-[1.08] tracking-[-0.03em] opacity-0 animate-[slideUp_0.65s_cubic-bezier(0.16,1,0.3,1)_forwards]"
               style={{ animationDelay: "0.55s", fontFamily: "var(--font-heebo)" }}
               dir="rtl"
             >
@@ -42,7 +42,7 @@ export default function Home() {
           </h1>
 
           <p
-            className="mt-8 text-[clamp(16px,2.5vw,20px)] text-[rgba(255,255,255,0.65)] leading-relaxed max-w-[560px] mx-auto opacity-0 animate-[slideUp_0.6s_cubic-bezier(0.16,1,0.3,1)_forwards]"
+            className="mt-8 text-[clamp(14px,2.5vw,20px)] text-[rgba(255,255,255,0.65)] leading-relaxed max-w-[560px] mx-auto opacity-0 animate-[slideUp_0.6s_cubic-bezier(0.16,1,0.3,1)_forwards]"
             style={{ animationDelay: "0.9s" }}
           >
             העולם מלא באסטרטגיות, מצגות, ותוכניות חמש-שנתיות.
