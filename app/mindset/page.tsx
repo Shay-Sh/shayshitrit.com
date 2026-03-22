@@ -59,7 +59,7 @@ export default function MindsetPage() {
       <section className="pb-12 px-6 md:px-12">
         <div className="max-w-[700px] mx-auto text-center">
           <ScrollReveal>
-            <p className="text-[18px] text-[rgba(255,255,255,0.6)] leading-[1.9]">
+            <p className="text-[18px] text-[rgba(255,255,255,0.68)] leading-[1.9]">
               ה-builder mindset זה לא על כלים או קוד. זה על דרך חשיבה -להתחיל קטן, לשלוח מהר, ללמוד מהמציאות, ולשתף בפתיחות. הגישה הזו הייתה קיימת לפני AI, אבל AI הפך אותה לחזקה פי מאה -כי עכשיו כל אחד יכול לבנות.
             </p>
           </ScrollReveal>
@@ -82,7 +82,7 @@ export default function MindsetPage() {
                 </div>
                 <div className="space-y-5 text-right">
                   {p.body.map((para, j) => (
-                    <p key={j} className="text-[17px] text-[rgba(255,255,255,0.6)] leading-[1.9]">{para}</p>
+                    <p key={j} className="text-[17px] text-[rgba(255,255,255,0.68)] leading-[1.9]">{para}</p>
                   ))}
                 </div>
               </article>
@@ -91,7 +91,7 @@ export default function MindsetPage() {
         </div>
       </section>
 
-      <section className="py-24 px-6 md:px-12 border-t border-[rgba(255,255,255,0.04)]">
+      <section className="py-24 px-6 md:px-12">
         <div className="max-w-[700px] mx-auto text-center">
           <ScrollReveal>
             <p className="text-xl md:text-2xl font-bold text-[rgba(255,255,255,0.75)] leading-relaxed mb-12">

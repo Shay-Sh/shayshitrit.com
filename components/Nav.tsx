@@ -15,17 +15,15 @@ export function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
 
   const links = [
-    { href: "/mindset", label: "The Mindset" },
-    { href: "/organizations", label: "For Organizations" },
-    { href: "/stack", label: "The Stack" },
+    { href: "/mindset", label: "Mindset" },
+    { href: "/organizations", label: "Organizations" },
+    { href: "/stack", label: "Builders" },
     { href: "/workflows", label: "Workflows" },
-    { href: "/start", label: "Start Building" },
     { href: "/about", label: "About" },
     { href: "/", label: "Home" },
   ];

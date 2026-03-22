@@ -21,9 +21,9 @@ export default function Home() {
         <div className="absolute -top-48 -right-64 w-[700px] h-[700px] bg-[radial-gradient(circle,rgba(0,102,255,0.06)_0%,transparent_65%)] pointer-events-none" />
         <div className="absolute -bottom-36 -left-32 w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(0,180,216,0.04)_0%,transparent_65%)] pointer-events-none" />
 
-        <div className="relative z-10 max-w-[900px] mx-auto px-6 md:px-12 py-32 w-full">
-          <h1 dir="ltr" className="text-left" style={{ fontFamily: "var(--font-outfit)" }}>
-            {["The world doesn't need", "more AI strategy.", "It needs more builders."].map((line, i) => (
+        <div className="relative z-10 max-w-[900px] mx-auto px-6 md:px-12 py-32 w-full text-center">
+          <h1 dir="ltr" style={{ fontFamily: "var(--font-outfit)" }}>
+            {["The world doesn't need", "more AI strategy."].map((line, i) => (
               <span
                 key={i}
                 className="block text-[clamp(36px,7vw,72px)] font-black leading-[1.08] tracking-[-0.03em] opacity-0 animate-[slideUp_0.65s_cubic-bezier(0.16,1,0.3,1)_forwards]"
@@ -32,10 +32,16 @@ export default function Home() {
                 {line}
               </span>
             ))}
+            <span
+              className="block text-[clamp(36px,7vw,72px)] font-black leading-[1.08] tracking-[-0.03em] opacity-0 animate-[slideUp_0.65s_cubic-bezier(0.16,1,0.3,1)_forwards]"
+              style={{ animationDelay: "0.55s" }}
+            >
+              It needs more <span style={{ fontFamily: "var(--font-heebo)" }}>בילדרס</span>.
+            </span>
           </h1>
 
           <p
-            className="mt-8 text-[clamp(16px,2.5vw,20px)] text-[rgba(255,255,255,0.55)] leading-relaxed max-w-[560px] opacity-0 animate-[slideUp_0.6s_cubic-bezier(0.16,1,0.3,1)_forwards]"
+            className="mt-8 text-[clamp(16px,2.5vw,20px)] text-[rgba(255,255,255,0.65)] leading-relaxed max-w-[560px] mx-auto opacity-0 animate-[slideUp_0.6s_cubic-bezier(0.16,1,0.3,1)_forwards]"
             style={{ animationDelay: "0.9s" }}
           >
             העולם מלא באסטרטגיות, מצגות, ותוכניות חמש-שנתיות.
@@ -65,6 +71,55 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ═══ WHO AM I ═══ */}
+      <section className="py-24 md:py-32 px-6 md:px-12">
+        <div className="max-w-[800px] mx-auto text-center">
+          <ScrollReveal>
+            <div className="w-44 h-44 md:w-52 md:h-52 mx-auto mb-8">
+              <Image src="/shay_nobackground.png" alt="שי שטרית - בילדר AI ומייסד Lab17" width={208} height={208} className="w-full h-full object-contain" priority />
+            </div>
+          </ScrollReveal>
+          <ScrollReveal delay={80}>
+            <h2 className="text-3xl md:text-4xl font-black mb-6">שי שטרית</h2>
+          </ScrollReveal>
+          <ScrollReveal delay={150}>
+            <p className="text-[18px] md:text-[20px] leading-[1.8] text-[rgba(255,255,255,0.72)] max-w-[600px] mx-auto mb-6">
+              נשוי ליוליה ואבא ל-4. מהנדס תעשייה וניהול, מנהל מוצר, וחי AI.
+              <br />
+              מייסד <strong className="text-[#F0F0F5]">Lab17</strong> ושותף מייסד <strong className="text-[#F0F0F5]">Builders Lab</strong>.
+              <br />
+              בונה מערכות ו-AI Agents שעובדים בפרודקשן.
+            </p>
+            <Link href="/about" className="inline-block text-[14px] font-bold text-[#0066FF] hover:text-[#00B4D8] transition-colors">
+              עוד עליי ←
+            </Link>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* ═══ SOCIAL PROOF - LOGO WALL ═══ */}
+      <section className="py-16 md:py-20 px-6 md:px-12">
+        <div className="max-w-[960px] mx-auto text-center">
+          <ScrollReveal>
+            <p className="text-[18px] md:text-[20px] text-[rgba(255,255,255,0.5)] mb-12">
+              בניתי agents, אוטומציות, והכשרתי צוותים בחברות כמו
+            </p>
+          </ScrollReveal>
+          <ScrollReveal delay={100}>
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-8 md:gap-10 items-center justify-items-center" dir="ltr">
+              {[1,2,3,4,5,6,7,8,9,10,11,12,13,14].map((n) => (
+                <div key={n} className="flex items-center justify-center h-12 md:h-16">
+                  <img src={`/logos/${n}.svg`} alt="" className="h-full w-auto brightness-0 invert opacity-50 hover:opacity-80 transition-opacity" loading="lazy" />
+                </div>
+              ))}
+            </div>
+          </ScrollReveal>
+          <ScrollReveal delay={200}>
+            <p className="text-[13px] text-[rgba(255,255,255,0.3)] mt-8">ועוד עשרות חברות נוספות</p>
+          </ScrollReveal>
+        </div>
+      </section>
+
       {/* ═══ THE SHIFT ═══ */}
       <section className="py-28 md:py-36 px-6 md:px-12">
         <div className="max-w-[700px] mx-auto space-y-20 md:space-y-28 text-center">
@@ -91,7 +146,7 @@ export default function Home() {
                 >
                   {block.en}
                 </h2>
-                <p className="text-[17px] text-[rgba(255,255,255,0.55)] leading-[1.85]">
+                <p className="text-[17px] text-[rgba(255,255,255,0.68)] leading-[1.85]">
                   {block.he}
                 </p>
               </div>
@@ -101,7 +156,7 @@ export default function Home() {
       </section>
 
       {/* ═══ PRINCIPLES PREVIEW ═══ */}
-      <section className="py-24 md:py-32 px-6 md:px-12 border-t border-[rgba(255,255,255,0.04)]">
+      <section className="py-24 md:py-32 px-6 md:px-12">
         <div className="max-w-[700px] mx-auto text-center">
           <ScrollReveal>
             <h2
@@ -126,7 +181,7 @@ export default function Home() {
                     </h3>
                   </div>
                   {p.heb && <div className="text-[14px] text-[rgba(255,255,255,0.4)] font-bold mb-1">{p.heb}</div>}
-                  <p className="text-[15px] text-[rgba(255,255,255,0.55)] leading-relaxed">{p.desc}</p>
+                  <p className="text-[15px] text-[rgba(255,255,255,0.6)] leading-relaxed">{p.desc}</p>
                 </div>
               </ScrollReveal>
             ))}
@@ -168,7 +223,7 @@ export default function Home() {
                   >
                     {card.en}
                   </h3>
-                  <p className="text-[15px] text-[rgba(255,255,255,0.55)] leading-relaxed mb-5 flex-1">{card.he}</p>
+                  <p className="text-[15px] text-[rgba(255,255,255,0.6)] leading-relaxed mb-5 flex-1">{card.he}</p>
                   <span className="text-[14px] font-bold text-[#0066FF]">קראו עוד ←</span>
                 </Link>
               </ScrollReveal>
@@ -177,32 +232,10 @@ export default function Home() {
 
           <ScrollReveal delay={300}>
             <div className="mt-8">
-              <Link href="/start" className="text-[15px] font-bold text-[rgba(255,255,255,0.45)] hover:text-[#0066FF] transition-colors">
+              <Link href="/start" className="text-[14px] text-[rgba(255,255,255,0.4)] hover:text-[#0066FF] transition-colors">
                 חדשים בבנייה? התחילו מפה ←
               </Link>
             </div>
-          </ScrollReveal>
-        </div>
-      </section>
-
-      {/* ═══ WHO AM I (brief) ═══ */}
-      <section className="py-20 px-6 md:px-12 border-t border-[rgba(255,255,255,0.04)]">
-        <div className="max-w-[700px] mx-auto text-center">
-          <ScrollReveal>
-            <div className="w-28 h-28 mx-auto mb-6">
-              <Image src="/shay_nobackground.png" alt="שי שטרית - בילדר AI" width={112} height={112} className="w-full h-full object-contain" />
-            </div>
-          </ScrollReveal>
-          <ScrollReveal delay={100}>
-            <p className="text-[17px] leading-relaxed text-[rgba(255,255,255,0.6)]">
-              <strong className="text-[#F0F0F5]">שי שטרית.</strong>{" "}
-              מייסד Lab17. שותף מייסד Builders Lab יחד עם עמיתי בונה.
-              <br />
-              נשוי, אבא ל-4. בונה מערכות AI שעובדות בפרודקשן.
-            </p>
-            <Link href="/about" className="inline-block mt-5 text-[14px] font-bold text-[#0066FF] hover:text-[#00B4D8] transition-colors">
-              עוד עליי ←
-            </Link>
           </ScrollReveal>
         </div>
       </section>

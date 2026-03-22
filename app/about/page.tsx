@@ -46,17 +46,17 @@ export default function AboutPage() {
           </ScrollReveal>
           <div className="text-right space-y-5">
             <ScrollReveal delay={150}>
-              <p className="text-[17px] text-[rgba(255,255,255,0.6)] leading-[1.9]">
+              <p className="text-[17px] text-[rgba(255,255,255,0.68)] leading-[1.9]">
                 נשוי, אבא ל-4. בונה מערכות AI שעובדות בפרודקשן. לא מתכנת - בילדר. בונה עם AI כלים שרצים אצל חברות אמיתיות, עם משתמשים אמיתיים, עם תוצאות שאפשר למדוד.
               </p>
             </ScrollReveal>
             <ScrollReveal delay={200}>
-              <p className="text-[17px] text-[rgba(255,255,255,0.6)] leading-[1.9]">
+              <p className="text-[17px] text-[rgba(255,255,255,0.68)] leading-[1.9]">
                 עבדתי עם יותר מחמישים חברות - מסטארטאפים קטנים ועד ארגוני enterprise. hackathons, enablement, co-building, voice agents. כל פעם מחדש, אותה תובנה: מי שבונה - מתקדם. מי שמתכנן - נתקע.
               </p>
             </ScrollReveal>
             <ScrollReveal delay={250}>
-              <p className="text-[17px] text-[rgba(255,255,255,0.6)] leading-[1.9]">
+              <p className="text-[17px] text-[rgba(255,255,255,0.68)] leading-[1.9]">
                 מלמד, בונה, ומשתף הכל בחינם. כי ככה הקהילה גדלה, וככה אני לומד הכי מהר.
               </p>
             </ScrollReveal>
@@ -65,7 +65,7 @@ export default function AboutPage() {
       </section>
 
       {/* What I Built */}
-      <section className="py-20 px-6 md:px-12 border-t border-[rgba(255,255,255,0.04)]">
+      <section className="py-20 px-6 md:px-12">
         <div className="max-w-[700px] mx-auto text-center">
           <ScrollReveal>
             <h2 className="text-2xl md:text-3xl font-extrabold mb-10" style={{ fontFamily: "var(--font-outfit)" }} dir="ltr">What I Built</h2>
@@ -84,7 +84,7 @@ export default function AboutPage() {
       </section>
 
       {/* Ventures */}
-      <section className="py-20 px-6 md:px-12 border-t border-[rgba(255,255,255,0.04)]">
+      <section className="py-20 px-6 md:px-12">
         <div className="max-w-[700px] mx-auto text-center">
           <ScrollReveal>
             <h2 className="text-2xl md:text-3xl font-extrabold mb-10" style={{ fontFamily: "var(--font-outfit)" }} dir="ltr">Ventures</h2>
@@ -119,7 +119,7 @@ export default function AboutPage() {
       </section>
 
       {/* Contact + Social */}
-      <section className="py-12 px-6 md:px-12 border-t border-[rgba(255,255,255,0.04)]">
+      <section className="py-12 px-6 md:px-12">
         <div className="max-w-[700px] mx-auto text-center">
           <ScrollReveal>
             <p className="text-[15px] text-[rgba(255,255,255,0.5)] mb-4">רוצים לדבר?</p>

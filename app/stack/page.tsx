@@ -78,14 +78,14 @@ export default function StackPage() {
               "ה-framework להחלטות: מהירות הגעה לפרודקשן vs. customizability vs. תחזוקה. תמיד תבחרו במהירות -תמיד אפשר לשנות אחרי.",
             ].map((text, i) => (
               <ScrollReveal key={i} delay={i * 80}>
-                <p className="text-[17px] text-[rgba(255,255,255,0.6)] leading-[1.9]">{text}</p>
+                <p className="text-[17px] text-[rgba(255,255,255,0.68)] leading-[1.9]">{text}</p>
               </ScrollReveal>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="py-24 px-6 md:px-12 border-t border-[rgba(255,255,255,0.04)]">
+      <section className="py-24 px-6 md:px-12">
         <div className="max-w-[700px] mx-auto text-center">
           <ScrollReveal>
             <h2 className="text-2xl md:text-3xl font-extrabold mb-12" style={{ fontFamily: "var(--font-outfit)" }} dir="ltr">The Stack</h2>
@@ -109,17 +109,17 @@ export default function StackPage() {
         </div>
       </section>
 
-      <section className="py-24 px-6 md:px-12 border-t border-[rgba(255,255,255,0.04)]">
+      <section className="py-24 px-6 md:px-12">
         <div className="max-w-[700px] mx-auto text-center">
           <ScrollReveal>
             <h2 className="text-2xl md:text-3xl font-extrabold mb-8" style={{ fontFamily: "var(--font-outfit)" }} dir="ltr">How They Work Together</h2>
           </ScrollReveal>
           <ScrollReveal delay={100}>
             <div className="text-right space-y-5">
-              <p className="text-[17px] text-[rgba(255,255,255,0.6)] leading-[1.9]">
+              <p className="text-[17px] text-[rgba(255,255,255,0.68)] leading-[1.9]">
                 ה-workflow שלי: מתחיל עם <strong className="text-[rgba(255,255,255,0.85)]">Claude Code</strong> לתכנון ואפיון. משם ל-<strong className="text-[rgba(255,255,255,0.85)]">n8n</strong> לבניית ה-orchestration וה-workflows. <strong className="text-[rgba(255,255,255,0.85)]">Lovable</strong> בונה את הממשק. <strong className="text-[rgba(255,255,255,0.85)]">VAPI</strong> מוסיף שכבת קול אם צריך. <strong className="text-[rgba(255,255,255,0.85)]">Supabase</strong> מנהל את כל ה-data. הכל מתחבר ורץ על Vercel.
               </p>
-              <p className="text-[17px] text-[rgba(255,255,255,0.6)] leading-[1.9]">
+              <p className="text-[17px] text-[rgba(255,255,255,0.68)] leading-[1.9]">
                 דוגמה: voice agent מרעיון לפרודקשן -Claude Code עוזר לתכנן את הארכיטקטורה. n8n מנהל את ה-call flow וה-post-call processing. VAPI מטפל בטלפוניה. Supabase שומר את ה-data והתמלולים. Lovable בונה את הדשבורד. הכל מחובר, הכל בפרודקשן.
               </p>
             </div>
@@ -127,10 +127,10 @@ export default function StackPage() {
         </div>
       </section>
 
-      <section className="py-20 px-6 md:px-12 border-t border-[rgba(255,255,255,0.04)]">
+      <section className="py-20 px-6 md:px-12">
         <div className="max-w-[700px] mx-auto text-center">
           <ScrollReveal>
-            <p className="text-[18px] text-[rgba(255,255,255,0.6)] leading-[1.9] mb-6">
+            <p className="text-[18px] text-[rgba(255,255,255,0.68)] leading-[1.9] mb-6">
               רוצים ללמוד לבנות? ב-Builders Lab אנחנו בונים agents ופתרונות end-to-end ללקוחות, מלמדים בקורסים, ומנהלים קהילה של בילדרים.
             </p>
           </ScrollReveal>

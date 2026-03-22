@@ -18,7 +18,7 @@ export default function OrganizationsPage() {
             <h2 className="text-2xl md:text-3xl font-extrabold mb-8" style={{ fontFamily: "var(--font-outfit)" }} dir="ltr">The Problem</h2>
           </ScrollReveal>
           <ScrollReveal delay={80}>
-            <p className="text-[17px] text-[rgba(255,255,255,0.6)] leading-[1.9] mb-10 text-right">
+            <p className="text-[17px] text-[rgba(255,255,255,0.68)] leading-[1.9] mb-10 text-right">
               רוב פרויקטי ה-AI בארגונים נתקעים. לא כי הטכנולוגיה לא מוכנה -כי הגישה לא נכונה. מה שאני רואה שוב ושוב אצל יותר מחמישים חברות שעבדתי איתן:
             </p>
           </ScrollReveal>
@@ -40,13 +40,13 @@ export default function OrganizationsPage() {
         </div>
       </section>
 
-      <section className="py-24 px-6 md:px-12 border-t border-[rgba(255,255,255,0.04)]">
+      <section className="py-24 px-6 md:px-12">
         <div className="max-w-[700px] mx-auto text-center">
           <ScrollReveal>
             <h2 className="text-2xl md:text-3xl font-extrabold mb-8" style={{ fontFamily: "var(--font-outfit)" }} dir="ltr">The Builder Approach</h2>
           </ScrollReveal>
           <ScrollReveal delay={100}>
-            <p className="text-[17px] text-[rgba(255,255,255,0.6)] leading-[1.9] mb-8">מה משתנה כשארגון מאמץ גישת build-first:</p>
+            <p className="text-[17px] text-[rgba(255,255,255,0.68)] leading-[1.9] mb-8">מה משתנה כשארגון מאמץ גישת build-first:</p>
           </ScrollReveal>
           <div className="space-y-5 text-right">
             {[
@@ -57,14 +57,14 @@ export default function OrganizationsPage() {
               "תבנו על סמך data מפרודקשן, לא על סמך דרישות תיאורטיות.",
             ].map((text, i) => (
               <ScrollReveal key={i} delay={i * 60}>
-                <p className="text-[17px] text-[rgba(255,255,255,0.6)] leading-[1.9] p-5 bg-[rgba(255,255,255,0.015)] rounded-lg">{text}</p>
+                <p className="text-[17px] text-[rgba(255,255,255,0.68)] leading-[1.9] p-5 bg-[rgba(255,255,255,0.015)] rounded-lg">{text}</p>
               </ScrollReveal>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="py-24 px-6 md:px-12 border-t border-[rgba(255,255,255,0.04)]">
+      <section className="py-24 px-6 md:px-12">
         <div className="max-w-[700px] mx-auto text-center">
           <ScrollReveal>
             <h2 className="text-2xl md:text-3xl font-extrabold mb-10" style={{ fontFamily: "var(--font-outfit)" }} dir="ltr">What It Looks Like</h2>
@@ -88,10 +88,10 @@ export default function OrganizationsPage() {
         </div>
       </section>
 
-      <section className="py-20 px-6 md:px-12 border-t border-[rgba(255,255,255,0.04)]">
+      <section className="py-20 px-6 md:px-12">
         <div className="max-w-[700px] mx-auto text-center">
           <ScrollReveal>
-            <p className="text-[18px] text-[rgba(255,255,255,0.6)] leading-[1.9] mb-6">
+            <p className="text-[18px] text-[rgba(255,255,255,0.68)] leading-[1.9] mb-6">
               אם אתם רוצים להביא את הגישה הזאת לארגון שלכם -זה מה שאנחנו עושים ב-Lab17.
             </p>
           </ScrollReveal>

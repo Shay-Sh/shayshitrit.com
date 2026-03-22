@@ -110,7 +110,7 @@ export default function StartPage() {
                     <span className="text-[13px] font-bold text-[rgba(255,255,255,0.15)] shrink-0" style={{ fontFamily: "var(--font-outfit)" }}>{step.num}</span>
                     <h3 className="text-xl font-black text-[rgba(255,255,255,0.9)]" style={{ fontFamily: "var(--font-outfit)" }} dir="ltr">{step.name}</h3>
                   </div>
-                  <div className="space-y-2 text-[15px] text-[rgba(255,255,255,0.55)] leading-relaxed">
+                  <div className="space-y-2 text-[15px] text-[rgba(255,255,255,0.68)] leading-relaxed">
                     <p><span className="text-[rgba(255,255,255,0.7)] font-bold">מה זה:</span> {step.what}</p>
                     <p><span className="text-[rgba(255,255,255,0.7)] font-bold">איך מתחילים:</span> {step.how}</p>
                     <p><span className="text-[rgba(255,255,255,0.7)] font-bold">טיפ ראשון:</span> {step.tip}</p>
@@ -123,7 +123,7 @@ export default function StartPage() {
       </section>
 
       {/* ═══ FIRST 3 WORKFLOWS ═══ */}
-      <section className="py-24 px-6 md:px-12 border-t border-[rgba(255,255,255,0.04)]">
+      <section className="py-24 px-6 md:px-12">
         <div className="max-w-[700px] mx-auto">
           <ScrollReveal>
             <h2 className="text-2xl md:text-3xl font-extrabold mb-2 text-center" style={{ fontFamily: "var(--font-outfit)" }} dir="ltr">
@@ -142,7 +142,7 @@ export default function StartPage() {
                     <h3 className="text-lg font-extrabold text-[rgba(255,255,255,0.9)]" style={{ fontFamily: "var(--font-outfit)" }} dir="ltr">{wf.name}</h3>
                     <span className="text-[12px] font-bold text-[#0066FF] bg-[rgba(0,102,255,0.1)] px-3 py-1 rounded-full shrink-0">{wf.level}</span>
                   </div>
-                  <p className="text-[15px] text-[rgba(255,255,255,0.55)] leading-relaxed mb-2">{wf.desc}</p>
+                  <p className="text-[15px] text-[rgba(255,255,255,0.68)] leading-relaxed mb-2">{wf.desc}</p>
                   <p className="text-[14px] text-[rgba(255,255,255,0.4)]">{wf.learns}</p>
                 </div>
               </ScrollReveal>
@@ -152,7 +152,7 @@ export default function StartPage() {
       </section>
 
       {/* ═══ IDEAS TO BUILD ═══ */}
-      <section className="py-24 px-6 md:px-12 border-t border-[rgba(255,255,255,0.04)]">
+      <section className="py-24 px-6 md:px-12">
         <div className="max-w-[700px] mx-auto">
           <ScrollReveal>
             <h2 className="text-2xl md:text-3xl font-extrabold mb-2 text-center" style={{ fontFamily: "var(--font-outfit)" }} dir="ltr">
@@ -185,7 +185,7 @@ export default function StartPage() {
       </section>
 
       {/* ═══ COMING SOON SECTIONS ═══ */}
-      <section className="py-24 px-6 md:px-12 border-t border-[rgba(255,255,255,0.04)]">
+      <section className="py-24 px-6 md:px-12">
         <div className="max-w-[700px] mx-auto">
           <ScrollReveal>
             <h2 className="text-2xl md:text-3xl font-extrabold mb-12 text-center" style={{ fontFamily: "var(--font-outfit)" }} dir="ltr">
@@ -212,7 +212,7 @@ export default function StartPage() {
       </section>
 
       {/* ═══ CLOSING CTA ═══ */}
-      <section className="py-20 px-6 md:px-12 border-t border-[rgba(255,255,255,0.04)]">
+      <section className="py-20 px-6 md:px-12">
         <div className="max-w-[700px] mx-auto text-center">
           <ScrollReveal>
             <p className="text-[18px] text-[rgba(255,255,255,0.6)] leading-[1.9] mb-6">
