@@ -34,9 +34,10 @@ export default function Home() {
             ))}
             <span
               className="block text-[clamp(36px,7vw,72px)] font-black leading-[1.08] tracking-[-0.03em] opacity-0 animate-[slideUp_0.65s_cubic-bezier(0.16,1,0.3,1)_forwards]"
-              style={{ animationDelay: "0.55s" }}
+              style={{ animationDelay: "0.55s", fontFamily: "var(--font-heebo)" }}
+              dir="rtl"
             >
-              It needs more <span style={{ fontFamily: "var(--font-heebo)" }}>בילדרס</span>.
+              אִיט נִידְס מוֹר בִּילְדֶּרְס.
             </span>
           </h1>
 
